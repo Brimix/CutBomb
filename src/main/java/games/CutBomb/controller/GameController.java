@@ -20,7 +20,7 @@ public class GameController {
     @Autowired
     GamePlayRepository gp_rep;
 
-    @RequestMapping(path = "/GameView/{nn}", method = RequestMethod.GET)
+    @RequestMapping(path = "/GameView/{id}", method = RequestMethod.GET)
     public GameViewDTO GameView(@PathVariable Long id){
         GamePlay gamePlay = gp_rep.findById(id).orElse(null);
         if(gamePlay == null)
