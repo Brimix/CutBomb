@@ -5,8 +5,6 @@ import games.CutBomb.model.GamePlay;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -14,7 +12,7 @@ public class GameViewDTO {
     private long id;
     private String username;
     private List<String> cards;
-    private List<Opponent> opponent;
+    private List<Opponent> opponents;
 
     public GameViewDTO(GamePlay gamePlay){
         this.id = gamePlay.getPlayer().getId();
@@ -22,7 +20,7 @@ public class GameViewDTO {
         this.cards = gamePlay.getCards().stream().map(card -> card.getType()).collect(toList());
 
         Game game = gamePlay.getGame();
-        this.opponent = game.getGamePlays().stream()
+        this.opponents = game.getGamePlays().stream()
                     .filter(gp -> (gp != gamePlay))
                     .map(gp -> new Opponent(gp))
                     .collect(toList());
@@ -31,7 +29,7 @@ public class GameViewDTO {
     public long getId() { return id; }
     public String getUsername() { return username; }
     public List<String> getCards() { return cards; }
-    public List<Opponent> getOpponent() { return opponent; }
+    public List<Opponent> getOpponents() { return opponents; }
 }
 
 class Opponent{
