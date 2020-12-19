@@ -10,40 +10,54 @@ import static java.util.stream.Collectors.toList;
 
 public class GameViewDTO {
     private long id;
-    private String username;
-    private List<String> cards;
-    private List<Opponent> opponents;
+//    private String username;
+//    private List<String> cards;
+    private InGamePlayer me;
+    private List<InGamePlayer> opponents;
 
     public GameViewDTO(GamePlay gamePlay){
         this.id = gamePlay.getPlayer().getId();
-        this.username = gamePlay.getPlayer().getUsername();
-        this.cards = gamePlay.getCards().stream().map(card -> card.getType()).collect(toList());
+//        this.username = gamePlay.getPlayer().getUsername();
+//        this.cards = gamePlay.getCards().stream().map(card -> card.getType()).collect(toList());
 
+        this.me = new InGamePlayer(gamePlay, false);
         Game game = gamePlay.getGame();
         this.opponents = game.getGamePlays().stream()
-                    .filter(gp -> (gp != gamePlay))
-                    .map(gp -> new Opponent(gp))
-                    .collect(toList());
+            .filter(gp -> (gp != gamePlay))
+            .map(gp -> new InGamePlayer(gp, true))
+            .collect(toList());
     }
 
     public long getId() { return id; }
-    public String getUsername() { return username; }
-    public List<String> getCards() { return cards; }
-    public List<Opponent> getOpponents() { return opponents; }
+//    public String getUsername() { return username; }
+//    public List<String> getCards() { return cards; }
+    public InGamePlayer getMe(){ return me; }
+    public List<InGamePlayer> getOpponents() { return opponents; }
 }
 
-class Opponent{
+class InGamePlayer {
     private String username;
-    private List<String> cards;
-    public Opponent(GamePlay gamePlay){
+    private List<InGameCard> cards;
+    private boolean current;
+    public InGamePlayer(GamePlay gamePlay, boolean opp){
         this.username = gamePlay.getPlayer().getUsername();
-        this.cards = new ArrayList<>();
-        this.cards = gamePlay.getCards().stream().map(card ->{
-            if(card.isHidden()) return "hidden";
-            return card.getType();
-        }).collect(toList());
+        this.cards = gamePlay.getCards().stream()
+                .map(card -> new InGameCard(card.getId(), (opp && card.isHidden()) ? "hidden" : card.getType()))
+                .collect(toList());
+        this.current = gamePlay.isCurrent();
     }
-
     public String getUsername() { return username; }
-    public List<String> getCards() { return cards; }
+    public List<InGameCard> getCards() { return cards; }
+    public boolean isCurrent(){ return current; }
+}
+
+class InGameCard{
+    private long id;
+    private String face;
+    public InGameCard(long id, String face) {
+        this.id = id;
+        this.face = face;
+    }
+    public long getId() { return id; }
+    public String getFace() { return face; }
 }
