@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @SpringBootApplication
 public class CutBombApplication {
@@ -70,6 +71,10 @@ public class CutBombApplication {
 //		Card C4 = new Card("bomb", G2);
 //		Card C5 = new Card("wire", G2);
 //		Card C6 = new Card("wire", G2);
+
+		Random rand = new Random();
+		GP.get(rand.nextInt(3)).setCurrent(true);
+		GP.get(rand.nextInt(3)+3).setCurrent(true);
 
 		player_rep.saveAll(List.of(A, B, C, D, E));
 		game_rep.saveAll(List.of(G1, G2));
