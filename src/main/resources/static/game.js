@@ -4,12 +4,12 @@ processData(urlGameView);
 function processData(urlGameView){
     $.get(urlGameView)
         .done(function(data){
-            document.getElementById("me").innerHTML = OwnView(data);
+            document.getElementById("me").innerHTML = PlayerView(data.me);
             var q = 0;
             data.opponents.forEach( function(opponent){
                 q = q + 1;
                 var opponentID = "gp" + q;
-                document.getElementById(opponentID).innerHTML = OpponentView(opponent);
+                document.getElementById(opponentID).innerHTML = PlayerView(opponent);
             });
             console.log("gameplay given!");
         })
@@ -24,22 +24,12 @@ function getParameterByName(name) {
     return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
 }
 
-function OwnView(data){
+function PlayerView(data){
     var HTML = "";
-    HTML += "<tr><center><h2>" + data.username + "</h2></center></tr> <tr>";
+    HTML += "<td><center><h2>" + data.username + "</h2></center></td>";
     data.cards.forEach(function(card){
-        HTML += "<td>" + card + "</td>";
+        HTML += "<td>" + card.face + "</td>";
     });
-    HTML += "</tr>";
-    return HTML;
-}
-
-function OpponentView(data){
-    var HTML = "";
-    HTML += "<tr><center><h2>" + data.username + "</h2></center></tr> <tr>";
-    data.cards.forEach(function(card){
-        HTML += "<td>" + card + "</td>";
-    });
-    HTML += "</tr>";
+    HTML += "<td>" + ((data.current == true) ? "PLAYS" : "") + "</td>";
     return HTML;
 }
