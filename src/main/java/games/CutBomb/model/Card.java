@@ -12,6 +12,7 @@ public class Card {
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
     private String type;
+    private boolean hidden;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "GameID")
@@ -36,4 +37,6 @@ public class Card {
     public void setGame(Game game) { this.game = game; }
     public GamePlay getGamePlay() { return gamePlay; }
     public void setGamePlay(GamePlay gamePlay) { this.gamePlay = gamePlay; }
+    public boolean isHidden() { return hidden; }
+    public void setHidden(boolean hidden) { this.hidden = hidden; }
 }
