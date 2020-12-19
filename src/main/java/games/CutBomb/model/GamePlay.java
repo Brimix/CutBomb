@@ -16,6 +16,7 @@ public class GamePlay {
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
     private String role;
+    private boolean current;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "PlayerID")
@@ -37,6 +38,7 @@ public class GamePlay {
         this.role = role;
         this.player = player; player.getGamePlays().add(this);
         this.game = game; game.getGamePlays().add(this);
+        this.current = false;
     }
 
     //~ Getters and Setters
@@ -49,6 +51,8 @@ public class GamePlay {
     public void setGame(Game game) { this.game = game; }
     public Set<Card> getCards() { return cards; }
     public void setCards(Set<Card> cards) { this.cards = cards; }
+    public boolean isCurrent() { return current; }
+    public void setCurrent(boolean current) { this.current = current; }
 
     //~ Methods
     public void addCard(Card card){
