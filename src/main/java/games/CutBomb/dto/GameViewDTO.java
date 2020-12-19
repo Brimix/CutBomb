@@ -27,11 +27,16 @@ public class GameViewDTO {
                     .map(gp -> new Opponent(gp))
                     .collect(toList());
     }
+
+    public long getId() { return id; }
+    public String getUsername() { return username; }
+    public List<String> getCards() { return cards; }
+    public List<Opponent> getOpponent() { return opponent; }
 }
 
 class Opponent{
     private String username;
-    List<String> cards;
+    private List<String> cards;
     public Opponent(GamePlay gamePlay){
         this.username = gamePlay.getPlayer().getUsername();
         this.cards = new ArrayList<>();
@@ -40,4 +45,7 @@ class Opponent{
             return card.getType();
         }).collect(toList());
     }
+
+    public String getUsername() { return username; }
+    public List<String> getCards() { return cards; }
 }
