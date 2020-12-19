@@ -23,12 +23,14 @@ import org.springframework.security.web.authentication.logout.HttpStatusReturnin
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
 public class CutBombApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(CutBombApplication.class, args);
+		System.out.println("Server is up!");
 	}
 
 	@Bean
@@ -47,24 +49,34 @@ public class CutBombApplication {
 		Game G1 = new Game();
 		Game G2 = new Game();
 
-		GamePlay GP1 = new GamePlay("Good", A, G1);
-		GamePlay GP2 = new GamePlay("Bad", B, G1);
-		GamePlay GP3 = new GamePlay("Good", C, G1);
-		GamePlay GP4 = new GamePlay("Good", C, G2);
-		GamePlay GP5 = new GamePlay("Bad", D, G2);
-		GamePlay GP6 = new GamePlay("Bad", E, G2);
+		List<GamePlay> GP = new ArrayList<>();
+		GP.add(new GamePlay("Good", A, G1));
+		GP.add(new GamePlay("Bad", B, G1));
+		GP.add(new GamePlay("Good", C, G1));
+		GP.add(new GamePlay("Good", C, G2));
+		GP.add(new GamePlay("Bad", D, G2));
+		GP.add(new GamePlay("Bad", E, G2));
 
-		Card C1 = new Card("wire", G1);
-		Card C2 = new Card("wire", G1);
-		Card C3 = new Card("bomb", G1);
-		Card C4 = new Card("bomb", G2);
-		Card C5 = new Card("wire", G2);
-		Card C6 = new Card("wire", G2);
+		List<Card> Deck = new ArrayList<>();
+		for(int i = 0; i < 30; i++){
+			String type = (i%7 == 0 ? "bomb" : (i%7 == 4 ? "wire" : "blank"));
+			Card card = new Card(type, (i < 15 ? G1 : G2));
+			GP.get(i/5).addCard(card);
+			Deck.add(card);
+		}
+//		Card C1 = new Card("wire", G1);
+//		Card C2 = new Card("wire", G1);
+//		Card C3 = new Card("bomb", G1);
+//		Card C4 = new Card("bomb", G2);
+//		Card C5 = new Card("wire", G2);
+//		Card C6 = new Card("wire", G2);
 
 		player_rep.saveAll(List.of(A, B, C, D, E));
 		game_rep.saveAll(List.of(G1, G2));
-		gp_rep.saveAll(List.of(GP1, GP2, GP3, GP4, GP5, GP6));
-		card_rep.saveAll(List.of(C1, C2, C3, C4, C5, C6));
+//		gp_rep.saveAll(List.of(GP1, GP2, GP3, GP4, GP5, GP6));
+//		card_rep.saveAll(List.of(C1, C2, C3, C4, C5, C6));
+		gp_rep.saveAll(GP);
+		card_rep.saveAll(Deck);
 	};}
 }
 
