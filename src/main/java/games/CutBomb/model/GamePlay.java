@@ -33,6 +33,13 @@ public class GamePlay {
     public GamePlay(){
         this.cards = new HashSet<>();
     }
+    public GamePlay(Player player, Game game){
+        this();
+        this.player = player; player.getGamePlays().add(this);
+        this.game = game; game.getGamePlays().add(this);
+        this.current = false;
+    }
+    // This one is only for testing. Must be removed later
     public GamePlay(String role, Player player, Game game){
         this();
         this.role = role;
