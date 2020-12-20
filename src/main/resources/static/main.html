@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cut the Bomb!</title>
+</head>
+<body>
+<form id="create-form" onsubmit="return false">
+<!--    <input class="btn btn-warning"  type="submit"  id="createGame"  value="CREATE NEW GAME"/>-->
+    <center> <label for="Capacity">Capacity:</label> <input class="form-control" id="Capacity" type="number" name="Capacity" required> </center> <br>
+    <center> <button type="submit" class="btn btn-info"> Create Game </button> </center>
+</form>
+
+<center> <h1> Open lobbies </h1> </center>
+
+<table border="solid black" width="100%">
+    <tr>
+        <th> ID </th>
+        <th> Creation Date </th>
+        <th> Occupancy </th>
+        <th> Wanna play? </th>
+    </tr>
+    <tbody id = game-table></tbody>
+</table>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/main.js"></script>
+</body>
+</html>
