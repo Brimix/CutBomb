@@ -12,6 +12,9 @@ public class Game {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
+    private Date created;
+    private int playersNumber;
+    private int capacity;
 
     @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
     private Set<GamePlay> gamePlays;
@@ -21,8 +24,14 @@ public class Game {
 
     //~ Constructors
     public Game() {
+        this.created = new Date();
+        this.playersNumber = 0;
         this.gamePlays = new HashSet<>();
         this.cards = new HashSet<>();
+    }
+    public Game(int capacity){
+        this();
+        this.capacity = capacity;
     }
 
     //~ Getters and Setters
