@@ -1,12 +1,19 @@
 package games.CutBomb;
 
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Util {
-    public Map<String, Object> makeMap(String key, Object value){
+    public static Map<String, Object> makeMap(String key, Object value){
         Map<String, Object> map = new LinkedHashMap<>();
         map.put(key, value);
         return map;
+    }
+
+    public static boolean isGuest(Authentication auth) {
+        return (auth == null) || (auth instanceof AnonymousAuthenticationToken);
     }
 }
