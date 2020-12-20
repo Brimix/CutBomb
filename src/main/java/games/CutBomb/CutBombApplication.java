@@ -56,8 +56,8 @@ public class CutBombApplication {
 		Player D = new Player("David", passwordEncoder().encode("d"));
 		Player E = new Player("Emilia", passwordEncoder().encode("e"));
 
-		Game G1 = new Game();
-		Game G2 = new Game();
+		Game G1 = new Game(3);
+		Game G2 = new Game(5);
 
 		List<GamePlay> GP = new ArrayList<>();
 		GP.add(new GamePlay("Good", A, G1));
@@ -85,7 +85,7 @@ public class CutBombApplication {
 		GP.get(rand.nextInt(3)).setCurrent(true);
 		GP.get(rand.nextInt(3)+3).setCurrent(true);
 
-		player_rep.saveAll(List.of(A, B, C, D, E));
+		player_rep.saveAll(List.of(BRX, A, B, C, D, E));
 		game_rep.saveAll(List.of(G1, G2));
 //		gp_rep.saveAll(List.of(GP1, GP2, GP3, GP4, GP5, GP6));
 //		card_rep.saveAll(List.of(C1, C2, C3, C4, C5, C6));
@@ -112,7 +112,7 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
 				System.out.println("Player found!\n");
 				if(player.getUsername() == "Brimix")
 					return new User(player.getUsername(), player.getPassword(),
-							AuthorityUtils.createAuthorityList("ADMIN"));
+							AuthorityUtils.commaSeparatedStringToAuthorityList("ADMIN,USER"));
 				else
 					return new User(player.getUsername(), player.getPassword(),
 							AuthorityUtils.createAuthorityList("USER"));
@@ -130,12 +130,17 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-				.antMatchers("/**").permitAll();
-//				.antMatchers("/web/**").permitAll()
-//				.antMatchers("/api/**").permitAll();
-		http.formLogin()
-				.usernameParameter("name")
-				.passwordParameter("pwd")
+				.antMatchers("/admin/**").hasAuthority("ADMIN")
+				.antMatchers("/login.html").permitAll()
+				.antMatchers("/login.js").permitAll()
+				.antMatchers("/jquery.js").permitAll()
+				.antMatchers("/api/login").permitAll()
+				.antMatchers("/api/signup").permitAll()
+				.antMatchers("/api/logout").permitAll()
+				.antMatchers("/**").hasAuthority("USER");
+		http.formLogin() // Don't forget to check for "already logged in"
+				.usernameParameter("user")
+				.passwordParameter("pass")
 				.loginPage("/api/login");
 		http.logout().logoutUrl("/api/logout");
 
