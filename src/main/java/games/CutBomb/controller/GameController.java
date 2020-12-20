@@ -50,7 +50,6 @@ public class GameController {
     public ResponseEntity<Object> create(Authentication auth, @RequestParam int capacity) {
         if(isGuest(auth))
             return new ResponseEntity<>(makeMap("error", "You're not logged in."), HttpStatus.UNAUTHORIZED);
-
         Player player = player_rep.findByUsername(auth.getName()).orElse(null);
         if(player == null)
             return new ResponseEntity<>(makeMap("error", "Player not in database."), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -69,5 +68,29 @@ public class GameController {
         game_rep.save(game);
         gp_rep.save(gamePlay);
         return new ResponseEntity<>("Game created!", HttpStatus.CREATED); // WARNING the body!!!!!!!!!!
+    }
+
+    @RequestMapping(path = "/JoinGame/{id}", method = RequestMethod.POST)
+    public ResponseEntity<Object> join(Authentication auth, @PathVariable Long id) {
+        if(isGuest(auth))
+            return new ResponseEntity<>(makeMap("error", "You're not logged in."), HttpStatus.UNAUTHORIZED);
+        Player player = player_rep.findByUsername(auth.getName()).orElse(null);
+        if(player == null)
+            return new ResponseEntity<>(makeMap("error", "Player not in database."), HttpStatus.INTERNAL_SERVER_ERROR);
+
+        Game game = game_rep.findById(id).orElse(null);
+        if(game == null)
+            return new ResponseEntity<>(makeMap("error", "Invalid Game-ID."), HttpStatus.FORBIDDEN);
+        if(game.getGamePlays().stream().anyMatch(gp -> (player == gp.getPlayer())))
+            return new ResponseEntity<>(makeMap("error", "You are already in the game!"), HttpStatus.FORBIDDEN);
+        if(game.numberOfPlayers() == game.getCapacity())
+            return new ResponseEntity<>(makeMap("error", "Game is full!"), HttpStatus.FORBIDDEN);
+
+        GamePlay gamePlay = new GamePlay(player, game);
+        if(gamePlay == null)
+            return new ResponseEntity<>(makeMap("error", "Gameplay couldn't be created."), HttpStatus.INTERNAL_SERVER_ERROR);
+
+        gp_rep.save(gamePlay);
+        return new ResponseEntity<>("Game joined!", HttpStatus.CREATED); // WARNING the body!!!!!!!!!!
     }
 }

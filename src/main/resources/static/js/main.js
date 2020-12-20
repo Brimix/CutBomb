@@ -1,5 +1,15 @@
-getGameList();
+var gameSelected = -1;
+function selectGame(gameid){
+    gameSelected = gameid;
+}
 
+$(function() {
+    $('.join-button').click(function () {
+        gameSelected = $(this).attr('name')
+    });
+});
+
+getGameList();
 function getGameList(){
     $.get("api/games")
         .done(function(data){
@@ -9,7 +19,12 @@ function getGameList(){
                 HTML += "<td>" + game.id + "</td>";
                 HTML += "<td>" + game.created + "</td>";
                 HTML += "<td>" + game.occupancy + "/" + game.capacity + "</td>";
-                HTML += "<td>" + "NOT YET IMP" + "</td>";
+//                HTML += "<td>" + "NOT YET IMP" + "</td>";
+                HTML += "<td><button type=\"submit\""
+                        + "class=\"form-control join-button\""
+                        + "form=\"join-form\""
+                        + "onclick=\"selectGame( " + game.id + ")\""
+                        + ">Join</button></td>";
                 HTML += "</tr>";
             });
             document.getElementById("game-table").innerHTML = HTML;
@@ -29,4 +44,17 @@ $('#create-form').on('submit', function (event) {
         .fail(function(){
             console.log("game creation failed");
         });
+});
+
+$('#join-form').on('submit', function (event){
+    console.log("submitted!");
+    url = "api/JoinGame/" + gameSelected;
+    console.log("accessing: " + url);
+    $.post(url)
+        .done(function(){
+            console.log("game joined");
+        })
+        .fail(function(){
+            console.log("game joining failed");
+        })
 });
