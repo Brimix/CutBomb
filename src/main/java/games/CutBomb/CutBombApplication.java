@@ -8,15 +8,23 @@ import games.CutBomb.repository.CardRepository;
 import games.CutBomb.repository.GamePlayRepository;
 import games.CutBomb.repository.GameRepository;
 import games.CutBomb.repository.PlayerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.GlobalAuthenticationConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
@@ -41,11 +49,12 @@ public class CutBombApplication {
 			GamePlayRepository gp_rep,
 			CardRepository card_rep
 	){ return (args) -> {
-		Player A = new Player("Anna", "a");
-		Player B = new Player("Brian", "b");
-		Player C = new Player("Camila", "c");
-		Player D = new Player("David", "d");
-		Player E = new Player("Emilia", "e");
+		Player BRX = new Player("Brimix", passwordEncoder().encode("secret"));
+		Player A = new Player("Anna", passwordEncoder().encode("a"));
+		Player B = new Player("Brian", passwordEncoder().encode("b"));
+		Player C = new Player("Camila", passwordEncoder().encode("c"));
+		Player D = new Player("David", passwordEncoder().encode("d"));
+		Player E = new Player("Emilia", passwordEncoder().encode("e"));
 
 		Game G1 = new Game();
 		Game G2 = new Game();
@@ -83,6 +92,36 @@ public class CutBombApplication {
 		gp_rep.saveAll(GP);
 		card_rep.saveAll(Deck);
 	};}
+
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+	}
+}
+
+@Configuration
+class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
+	@Autowired
+	PlayerRepository playerRepository;
+
+	@Override
+	public void init(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(inputName-> {
+			Player player = playerRepository.findByUsername(inputName).orElse(null);
+			if (player != null) {
+				System.out.println("Player found!\n");
+				if(player.getUsername() == "Brimix")
+					return new User(player.getUsername(), player.getPassword(),
+							AuthorityUtils.createAuthorityList("ADMIN"));
+				else
+					return new User(player.getUsername(), player.getPassword(),
+							AuthorityUtils.createAuthorityList("USER"));
+			} else {
+				System.out.println("Player not found!\n");
+				throw new UsernameNotFoundException("Unknown user: " + inputName);
+			}
+		});
+	}
 }
 
 @EnableWebSecurity
@@ -94,31 +133,31 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/**").permitAll();
 //				.antMatchers("/web/**").permitAll()
 //				.antMatchers("/api/**").permitAll();
-//		http.formLogin()
-//				.usernameParameter("name")
-//				.passwordParameter("pwd")
-//				.loginPage("/api/login");
-//		http.logout().logoutUrl("/api/logout");
-//
-//		// turn off checking for CSRF tokens
-//		http.csrf().disable();
-//
-//		// if user is not authenticated, just send an authentication failure response
-//		http.exceptionHandling().authenticationEntryPoint((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));
-//
-//		// if login is successful, just clear the flags asking for authentication
-//		http.formLogin().successHandler((req, res, auth) -> clearAuthenticationAttributes(req));
-//
-//		// if login fails, just send an authentication failure response
-//		http.formLogin().failureHandler((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));
-//
-//		// if logout is successful, just send a success response
-//		http.logout().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler());
+		http.formLogin()
+				.usernameParameter("name")
+				.passwordParameter("pwd")
+				.loginPage("/api/login");
+		http.logout().logoutUrl("/api/logout");
+
+		// turn off checking for CSRF tokens
+		http.csrf().disable();
+
+		// if user is not authenticated, just send an authentication failure response
+		http.exceptionHandling().authenticationEntryPoint((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));
+
+		// if login is successful, just clear the flags asking for authentication
+		http.formLogin().successHandler((req, res, auth) -> clearAuthenticationAttributes(req));
+
+		// if login fails, just send an authentication failure response
+		http.formLogin().failureHandler((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));
+
+		// if logout is successful, just send a success response
+		http.logout().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler());
 	}
-//	private void clearAuthenticationAttributes(HttpServletRequest request) {
-//		HttpSession session = request.getSession(false);
-//		if (session != null) {
-//			session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
-//		}
-//	}
+	private void clearAuthenticationAttributes(HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+		}
+	}
 }
