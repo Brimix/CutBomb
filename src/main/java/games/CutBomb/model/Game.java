@@ -1,5 +1,6 @@
 package games.CutBomb.model;
 
+import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -14,6 +15,9 @@ public class Game {
     private long id;
     private Date created;
     private int capacity;
+
+    @OneToOne(fetch=FetchType.EAGER)
+    private GamePlay host;
 
     @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
     private Set<GamePlay> gamePlays;
@@ -38,6 +42,8 @@ public class Game {
     public void setCreated(Date created) { this.created = created; }
     public int getCapacity() { return capacity; }
     public void setCapacity(int capacity) { this.capacity = capacity; }
+    public GamePlay getHost() { return host; }
+    public void setHost(GamePlay host) { this.host = host; }
     public Set<GamePlay> getGamePlays() { return gamePlays; }
     public void setGamePlays(Set<GamePlay> gamePlays) { this.gamePlays = gamePlays; }
     public Set<Card> getCards() { return cards; }

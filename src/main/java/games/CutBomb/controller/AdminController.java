@@ -59,6 +59,8 @@ public class AdminController {
                                 return dtoPlayer;
                             }).collect(toList()));
                     dto.put("cards", game.getCards().stream().map(card -> card.getType()).collect(toList()));
+                    dto.put("host", game.getHost().getId());
+//                    dto.put("current", game.getHost().getId());
                     return dto;
                 }).collect(toList());
     }

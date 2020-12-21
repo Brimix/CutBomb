@@ -15,6 +15,9 @@ function getPlayerList(){
                 HTML += "<td>" + player.id + "</td>";
                 HTML += "<td>" + player.username + "</td>";
                 HTML += "<td>" + player.joined + "</td>";
+                if(player.host){
+                    HTML += "<td> HOST </td>";
+                }
 //                HTML += "<td><button type=\"submit\""
 //                        + "class=\"form-control join-button\""
 //                        + "form=\"join-form\""

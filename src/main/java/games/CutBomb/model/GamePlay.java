@@ -64,4 +64,7 @@ public class GamePlay {
         this.cards.add(card);
         card.setGamePlay(this);
     }
+    public boolean isHost(){
+        return (this == game.getHost());
+    }
 }

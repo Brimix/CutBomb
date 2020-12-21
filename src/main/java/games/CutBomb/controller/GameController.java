@@ -2,9 +2,11 @@ package games.CutBomb.controller;
 
 import games.CutBomb.dto.GameDTO;
 import games.CutBomb.dto.PlayerInGameDTO;
+import games.CutBomb.model.Card;
 import games.CutBomb.model.Game;
 import games.CutBomb.model.GamePlay;
 import games.CutBomb.model.Player;
+import games.CutBomb.repository.CardRepository;
 import games.CutBomb.repository.GamePlayRepository;
 import games.CutBomb.repository.GameRepository;
 import games.CutBomb.repository.PlayerRepository;
@@ -57,7 +59,7 @@ public class GameController {
         if(player == null)
             return new ResponseEntity<>(makeMap("error", "Player not in database."), HttpStatus.INTERNAL_SERVER_ERROR);
 
-        if(capacity < 1 || 8 < capacity)
+        if(capacity < 3 || 8 < capacity)
             return new ResponseEntity<>(makeMap("error", "Input capacity is invalid."), HttpStatus.FORBIDDEN);
 
         Game game = new Game(capacity);
@@ -68,8 +70,10 @@ public class GameController {
         if(gamePlay == null)
             return new ResponseEntity<>(makeMap("error", "Gameplay couldn't be created."), HttpStatus.INTERNAL_SERVER_ERROR);
 
-        game_rep.save(game);
-        gp_rep.save(gamePlay);
+        game = game_rep.save(game);
+        gamePlay = gp_rep.save(gamePlay);
+        game.setHost(gamePlay); game_rep.save(game);
+
         return new ResponseEntity<>(makeMap("gpid", gamePlay.getId()), HttpStatus.CREATED);
     }
 

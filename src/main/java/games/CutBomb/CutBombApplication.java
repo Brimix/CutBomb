@@ -87,9 +87,13 @@ public class CutBombApplication {
 
 		player_rep.saveAll(List.of(BRX, A, B, C, D, E));
 		game_rep.saveAll(List.of(G1, G2));
-//		gp_rep.saveAll(List.of(GP1, GP2, GP3, GP4, GP5, GP6));
-//		card_rep.saveAll(List.of(C1, C2, C3, C4, C5, C6));
 		gp_rep.saveAll(GP);
+
+		Game NG1 = game_rep.findById(1L).get(), NG2 = game_rep.findById(2L).get();
+		GamePlay NGP1 = gp_rep.findById(2L).get(),  NGP2 = gp_rep.findById(4L).get();
+		NG1.setHost(NGP1); NG2.setHost(NGP2);
+		game_rep.save(NG1); game_rep.save(NG2);
+
 		card_rep.saveAll(Deck);
 	};}
 
