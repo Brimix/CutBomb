@@ -14,6 +14,7 @@ public class Game {
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
     private Date created;
+    private Date started;
     private int capacity;
 
     @OneToOne(fetch=FetchType.EAGER)
@@ -40,6 +41,8 @@ public class Game {
     public long getId() { return id; }
     public Date getCreated() { return created; }
     public void setCreated(Date created) { this.created = created; }
+    public Date getStarted() { return started; }
+    public void setStarted(Date started) { this.started = started; }
     public int getCapacity() { return capacity; }
     public void setCapacity(int capacity) { this.capacity = capacity; }
     public GamePlay getHost() { return host; }
