@@ -4,14 +4,16 @@ processData(urlGameView);
 function processData(urlGameView){
     $.get(urlGameView)
         .done(function(data){
-            document.getElementById("me").innerHTML = PlayerView(data.me);
-            var q = 0;
-            data.opponents.forEach( function(opponent){
-                q = q + 1;
-                var opponentID = "gp" + q;
-                document.getElementById(opponentID).innerHTML = PlayerView(opponent);
-            });
             console.log("gameplay given!");
+            document.getElementById("role").innerHTML = "Your role is: " + data.role;
+
+            var HTML = "";
+            data.opponents.forEach( function(opponent){
+                HTML += "<tr>" + PlayerView(opponent) + "</tr>";
+//                document.getElementById(opponentID).innerHTML = PlayerView(opponent);
+            });
+            HTML += "<tr>" + PlayerView(data.me) + "</tr>";
+            document.getElementById("player-table-game").innerHTML = HTML;
         })
         .fail(function(){
             console.log("couldn't retrieve gameplay");
