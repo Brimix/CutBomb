@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import static games.CutBomb.Util.isGuest;
 import static games.CutBomb.Util.makeMap;
@@ -141,9 +142,24 @@ public class GameController {
 
         List<Card> deck = new ArrayList<>();
         deck.add(new Card("bomb", game));
-        for(int i = 0; i < n-1; i++) deck.add(new Card("wire", game));
-        for(int i = 0; i < 4*n; i++) deck.add(new Card("blank", game));
-
+        for(int i = 0; i < n; i++) deck.add(new Card("wire", game));
+        for(int i = 0; i < 4*n-1; i++) deck.add(new Card("blank", game));
         card_rep.saveAll(deck);
+        dealCards(game);
+
+        Random rnd = new Random();
+        int starter_id = rnd.nextInt(n);
+        player.get(starter_id).setCurrent(true);
+    }
+
+    void dealCards(Game game){
+        int n = game.numberOfPlayers();
+        List<GamePlay> player = game.getGamePlays().stream().collect(toList());
+        List<Card> deck = game.getCards().stream().collect(toList());
+
+        shuffle(deck);
+        for(int i = 0; i < deck.size(); i++) player.get(i%n).addCard(deck.get(i));
+
+        gp_rep.saveAll(player);
     }
 }
