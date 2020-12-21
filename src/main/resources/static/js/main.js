@@ -38,11 +38,14 @@ function getGameList(){
 $('#create-form').on('submit', function (event) {
     $.post("/api/CreateGame",
             { capacity: $("#Capacity").val()})
-        .done(function(){
+        .done(function(data){
             console.log("game created");
+            url = "waiting-room.html/?gp=" + data.gpid;
+            location.href = url;
         })
-        .fail(function(){
+        .fail(function(data){
             console.log("game creation failed");
+            console.log(data.error);
         });
 });
 
@@ -51,10 +54,13 @@ $('#join-form').on('submit', function (event){
     url = "api/JoinGame/" + gameSelected;
     console.log("accessing: " + url);
     $.post(url)
-        .done(function(){
+        .done(function(data){
             console.log("game joined");
+            url = "waiting-room.html/?gp=" + data.gpid;
+            location.href = url;
         })
-        .fail(function(){
+        .fail(function(data){
             console.log("game joining failed");
+            console.log(data.error);
         })
 });
