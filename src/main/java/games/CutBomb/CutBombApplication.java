@@ -58,6 +58,7 @@ public class CutBombApplication {
 
 		Game G1 = new Game(3);
 		Game G2 = new Game(5);
+		Game G3 = new Game(5);
 
 		List<GamePlay> GP = new ArrayList<>();
 		GP.add(new GamePlay("Good", A, G1));
@@ -67,6 +68,12 @@ public class CutBombApplication {
 		GP.add(new GamePlay("Bad", D, G2));
 		GP.add(new GamePlay("Bad", E, G2));
 
+		GP.add(new GamePlay(A, G3));
+		GP.add(new GamePlay(B, G3));
+		GP.add(new GamePlay(C, G3));
+		GP.add(new GamePlay(D, G3));
+		GP.add(new GamePlay(E, G3));
+
 		List<Card> Deck = new ArrayList<>();
 		for(int i = 0; i < 30; i++){
 			String type = (i%7 == 0 ? "bomb" : (i%7 == 4 ? "wire" : "blank"));
@@ -74,27 +81,22 @@ public class CutBombApplication {
 			GP.get(i/5).addCard(card);
 			Deck.add(card);
 		}
-//		Card C1 = new Card("wire", G1);
-//		Card C2 = new Card("wire", G1);
-//		Card C3 = new Card("bomb", G1);
-//		Card C4 = new Card("bomb", G2);
-//		Card C5 = new Card("wire", G2);
-//		Card C6 = new Card("wire", G2);
 
 		Random rand = new Random();
 		GP.get(rand.nextInt(3)).setCurrent(true);
 		GP.get(rand.nextInt(3)+3).setCurrent(true);
 
 		player_rep.saveAll(List.of(BRX, A, B, C, D, E));
-		game_rep.saveAll(List.of(G1, G2));
+		game_rep.saveAll(List.of(G1, G2, G3));
 		gp_rep.saveAll(GP);
+		Game NG1 = game_rep.findById(1L).get(), NG2 = game_rep.findById(2L).get(), NG3 = game_rep.findById(3L).get();
+		GamePlay NGP1 = gp_rep.findById(2L).get(),  NGP2 = gp_rep.findById(4L).get(), NGP3 = gp_rep.findById(7L).get();
+		NG1.setHost(NGP1); NG2.setHost(NGP2); NG3.setHost(NGP3);
 
-		Game NG1 = game_rep.findById(1L).get(), NG2 = game_rep.findById(2L).get();
-		GamePlay NGP1 = gp_rep.findById(2L).get(),  NGP2 = gp_rep.findById(4L).get();
-		NG1.setHost(NGP1); NG2.setHost(NGP2);
-		game_rep.save(NG1); game_rep.save(NG2);
-
+		game_rep.save(NG1); game_rep.save(NG2); game_rep.save(NG3);
 		card_rep.saveAll(Deck);
+
+
 	};}
 
 	@Bean
