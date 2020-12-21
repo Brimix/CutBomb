@@ -12,13 +12,15 @@ public class GameViewDTO {
     private long id;
 //    private String username;
 //    private List<String> cards;
+    private int numberOfCards;
+    private String role;
     private InGamePlayer me;
     private List<InGamePlayer> opponents;
 
     public GameViewDTO(GamePlay gamePlay){
         this.id = gamePlay.getPlayer().getId();
-//        this.username = gamePlay.getPlayer().getUsername();
-//        this.cards = gamePlay.getCards().stream().map(card -> card.getType()).collect(toList());
+        this.numberOfCards = gamePlay.getCards().size();
+        this.role = gamePlay.getRole();
 
         this.me = new InGamePlayer(gamePlay, false);
         Game game = gamePlay.getGame();
@@ -29,8 +31,8 @@ public class GameViewDTO {
     }
 
     public long getId() { return id; }
-//    public String getUsername() { return username; }
-//    public List<String> getCards() { return cards; }
+    public int getNumberOfCards() { return numberOfCards; }
+    public String getRole() { return role; }
     public InGamePlayer getMe(){ return me; }
     public List<InGamePlayer> getOpponents() { return opponents; }
 }
