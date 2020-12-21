@@ -16,10 +16,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static games.CutBomb.Util.isGuest;
 import static games.CutBomb.Util.makeMap;
+import static java.util.Collections.shuffle;
 import static java.util.stream.Collectors.toList;
 
 @RestController
@@ -31,6 +34,8 @@ public class GameController {
     GameRepository game_rep;
     @Autowired
     GamePlayRepository gp_rep;
+    @Autowired
+    CardRepository card_rep;
 
     @RequestMapping(path = "/games", method = RequestMethod.GET)
     public List<GameDTO> GamesList(){
@@ -99,5 +104,46 @@ public class GameController {
 
         gp_rep.save(gamePlay);
         return new ResponseEntity<>(makeMap("gpid", gamePlay.getId()), HttpStatus.CREATED);
+    }
+    @RequestMapping(path = "/StartGame/{id}", method = RequestMethod.POST)
+    public ResponseEntity<Object> start(Authentication auth, @PathVariable Long id) {
+        if(isGuest(auth))
+            return new ResponseEntity<>(makeMap("error", "You're not logged in."), HttpStatus.UNAUTHORIZED);
+        Player player = player_rep.findByUsername(auth.getName()).orElse(null);
+        if(player == null)
+            return new ResponseEntity<>(makeMap("error", "Player not in database."), HttpStatus.INTERNAL_SERVER_ERROR);
+
+        GamePlay gamePlay = gp_rep.findById(id).orElse(null);
+        if(gamePlay == null)
+            return new ResponseEntity<>(makeMap("error", "Invalid GamePlay-ID."), HttpStatus.FORBIDDEN);
+        if(!player.getGamePlays().contains(gamePlay))
+            return new ResponseEntity<>(makeMap("error", "This isn't your game."), HttpStatus.UNAUTHORIZED);
+
+        Game game = gamePlay.getGame();
+        if(game == null)
+            return new ResponseEntity<>(makeMap("error", "Game couldn't be found."), HttpStatus.INTERNAL_SERVER_ERROR);
+
+        if(gamePlay != game.getHost())
+            return new ResponseEntity<>(makeMap("error", "You're not the host."), HttpStatus.FORBIDDEN);
+
+        game.setStarted(new Date()); game = game_rep.save(game);
+        formatGame(game); game = game_rep.save(game);
+        return new ResponseEntity<>(makeMap("OK", "Game is ready!"), HttpStatus.ACCEPTED);
+    }
+
+    void formatGame(Game game){
+        int n = game.numberOfPlayers();
+        int b = (n < 5 ? 1 : (n < 8 ? 2 : 3)); // Maybe can be done with a formula
+
+        List<GamePlay> player = game.getGamePlays().stream().collect(toList());
+        shuffle(player);
+        for(int i = 0; i < n; i++) player.get(i).setRole(i < b ? "Criminal" : "Savior");
+
+        List<Card> deck = new ArrayList<>();
+        deck.add(new Card("bomb", game));
+        for(int i = 0; i < n-1; i++) deck.add(new Card("wire", game));
+        for(int i = 0; i < 4*n; i++) deck.add(new Card("blank", game));
+
+        card_rep.saveAll(deck);
     }
 }
