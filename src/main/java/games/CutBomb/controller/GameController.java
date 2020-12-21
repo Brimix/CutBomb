@@ -1,7 +1,7 @@
 package games.CutBomb.controller;
 
 import games.CutBomb.dto.GameDTO;
-import games.CutBomb.dto.GameViewDTO;
+import games.CutBomb.dto.PlayerInGameDTO;
 import games.CutBomb.model.Game;
 import games.CutBomb.model.GamePlay;
 import games.CutBomb.model.Player;
@@ -14,10 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.http.HttpResponse;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import static games.CutBomb.Util.isGuest;
 import static games.CutBomb.Util.makeMap;
@@ -33,17 +30,23 @@ public class GameController {
     @Autowired
     GamePlayRepository gp_rep;
 
-    @RequestMapping(path = "/GameView/{id}", method = RequestMethod.GET)
-    public GameViewDTO GameView(@PathVariable Long id){
-        GamePlay gamePlay = gp_rep.findById(id).orElse(null);
-        if(gamePlay == null)
-            return null;
-        return new GameViewDTO(gamePlay);
-    }
-
     @RequestMapping(path = "/games", method = RequestMethod.GET)
     public List<GameDTO> GamesList(){
         return game_rep.findAll().stream().map(game -> new GameDTO(game)).collect(toList());
+    }
+
+    @RequestMapping(path = "/PlayersInGame/{id}", method = RequestMethod.GET)
+    public ResponseEntity<Object> PlayersList(@PathVariable Long id){
+        GamePlay gamePlay = gp_rep.findById(id).orElse(null);
+        if(gamePlay == null)
+            return new ResponseEntity<>(makeMap("error", "Invalid GamePlay-ID."), HttpStatus.FORBIDDEN);
+
+        Game game = gamePlay.getGame();
+        if(game == null)
+            return new ResponseEntity<>(makeMap("error", "Game not in database."), HttpStatus.INTERNAL_SERVER_ERROR);
+
+        List<PlayerInGameDTO> list = game.getGamePlays().stream().map(gp -> new PlayerInGameDTO(gp)).collect(toList());
+        return new ResponseEntity<>(list, HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(path = "/CreateGame", method = RequestMethod.POST)
@@ -67,7 +70,7 @@ public class GameController {
 
         game_rep.save(game);
         gp_rep.save(gamePlay);
-        return new ResponseEntity<>("Game created!", HttpStatus.CREATED); // WARNING the body!!!!!!!!!!
+        return new ResponseEntity<>(makeMap("gpid", gamePlay.getId()), HttpStatus.CREATED);
     }
 
     @RequestMapping(path = "/JoinGame/{id}", method = RequestMethod.POST)
@@ -91,6 +94,6 @@ public class GameController {
             return new ResponseEntity<>(makeMap("error", "Gameplay couldn't be created."), HttpStatus.INTERNAL_SERVER_ERROR);
 
         gp_rep.save(gamePlay);
-        return new ResponseEntity<>("Game joined!", HttpStatus.CREATED); // WARNING the body!!!!!!!!!!
+        return new ResponseEntity<>(makeMap("gpid", gamePlay.getId()), HttpStatus.CREATED);
     }
 }
