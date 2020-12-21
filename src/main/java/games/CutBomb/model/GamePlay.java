@@ -3,10 +3,7 @@ package games.CutBomb.model;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class GamePlay {
@@ -17,6 +14,7 @@ public class GamePlay {
     private long id;
     private String role;
     private boolean current;
+    private Date joined;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "PlayerID")
@@ -32,20 +30,18 @@ public class GamePlay {
     //~ Constructors
     public GamePlay(){
         this.cards = new HashSet<>();
+        this.current = false;
+        this.joined = new Date();
     }
     public GamePlay(Player player, Game game){
         this();
         this.player = player; player.getGamePlays().add(this);
         this.game = game; game.getGamePlays().add(this);
-        this.current = false;
     }
     // This one is only for testing. Must be removed later
     public GamePlay(String role, Player player, Game game){
-        this();
+        this(player, game);
         this.role = role;
-        this.player = player; player.getGamePlays().add(this);
-        this.game = game; game.getGamePlays().add(this);
-        this.current = false;
     }
 
     //~ Getters and Setters
@@ -60,6 +56,8 @@ public class GamePlay {
     public void setCards(Set<Card> cards) { this.cards = cards; }
     public boolean isCurrent() { return current; }
     public void setCurrent(boolean current) { this.current = current; }
+    public Date getJoined() { return joined; }
+    public void setJoined(Date joined) { this.joined = joined; }
 
     //~ Methods
     public void addCard(Card card){
