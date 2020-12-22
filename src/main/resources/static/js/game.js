@@ -1,43 +1,69 @@
-var urlGameView = "api/GameView/" + getParameterByName("gp");
-processData(urlGameView);
+var gameViewData = {};
+updateView();
 
-function processData(urlGameView){
+function updateView(){
+    loadData();
+    setTimeout( function(){ processData(); }, 300);
+    setTimeout( function(){ updateView(); }, 5000);
+}
+
+function loadData(){
+    var urlGameView = "api/GameView/" + getParameterByName("gp");
     $.get(urlGameView)
         .done(function(data){
             console.log("gameplay given!");
-            document.getElementById("role").innerHTML = "Your role is: " + data.role;
-
-            var HTML = "";
-            data.opponents.forEach( function(opponent){
-                HTML += "<tr>" + PlayerView(opponent) + "</tr>";
-            });
-            HTML += "<tr>" + PlayerView(data.me) + "</tr>";
-            document.getElementById("player-table-game").innerHTML = HTML;
+            gameViewData = data;
+            console.log(gameViewData);
         })
         .fail(function(){
             console.log("couldn't retrieve gameplay");
         });
 }
 
+function processData(){
+    document.getElementById("role").innerHTML = "Your role is: " + gameViewData.role;
+    var HTML = "";
+    gameViewData.opponents.forEach( function(opponent){
+        HTML += "<tr>" + PlayerView(opponent) + "</tr>";
+    });
+    HTML += "<tr>" + PlayerView(gameViewData.me) + "</tr>";
+//    console.log(HTML);
+    document.getElementById("player-table-game").innerHTML = HTML;
+}
 
 function getParameterByName(name) {
     var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
     return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
 }
 
-function PlayerView(data){
+function PlayerView(player){
     var HTML = "";
-    HTML += "<td><center><h2>" + data.username + "</h2></center></td>";
-    data.cards.forEach(function(card){
-//        HTML += "<td>" + card.face + "</td>";
-        HTML += "<td><button type=\"submit\""
-                + "class=\"form-control\""
-                + "form=\"flip-form\""
-                + "onclick=\"selectCard(" + card.id + ")\""
-                + ">" + card.face + "</button></td>";
+    HTML += "<td><center><h2>" + player.username + "</h2></center></td>";
+    player.cards.forEach(function(card){
+        if(canFlip(player.id, card.face)){
+            HTML += "<td><button type=\"submit\""
+                    + "class=\"form-control\""
+                    + "form=\"flip-form\""
+                    + "onclick=\"selectCard(" + card.id + ")\""
+                    + ">" + card.face + "</button></td>";
+        }
+        else {
+            HTML += "<td>" + card.face + "</td>";
+        }
     });
-    HTML += "<td>" + ((data.current == true) ? "PLAYS" : "") + "</td>";
+    HTML += "<td>" + ((player.current == true) ? "PLAYS" : "") + "</td>";
     return HTML;
+}
+function canFlip(gpid, face){
+    if(gameViewData.current == false)
+        return false;
+//    console.log("Current is you!");
+    if(gpid == gameViewData.id)
+        return false;
+//    console.log("Your card?");
+    if(face != "hidden")
+        return false;
+    return true;
 }
 
 var cardSelected = -1;
@@ -51,6 +77,7 @@ $('#flip-form').on('submit', function (event){
     $.post(url)
         .done(function(data){
             console.log("card flipped!");
+            updateView();
         })
         .fail(function(data){
             console.log("couldn't flip card");
