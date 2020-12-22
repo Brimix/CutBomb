@@ -1,6 +1,5 @@
 package games.CutBomb.controller;
 
-import games.CutBomb.model.Game;
 import games.CutBomb.model.GamePlay;
 import games.CutBomb.repository.CardRepository;
 import games.CutBomb.repository.GamePlayRepository;
@@ -58,9 +57,13 @@ public class AdminController {
                                 dtoPlayer.put("player", gp.getPlayer().getUsername());
                                 return dtoPlayer;
                             }).collect(toList()));
-                    dto.put("cards", game.getCards().stream().map(card -> card.getType()).collect(toList()));
+                    dto.put("cards", game.getDeck().stream().map(card -> card.getType()).collect(toList()));
+                    dto.put("discarded", game.getDiscarded().stream().map(card -> card.getType()).collect(toList()));
                     dto.put("host", game.getHost().getId());
-//                    dto.put("current", game.getHost().getId());
+
+                    GamePlay current = game.getGamePlays().stream()
+                            .filter(gp -> gp.isCurrent()).findAny().orElse(null);
+                    dto.put("current", (current == null ? null : current.getPlayer().getUsername()));
                     return dto;
                 }).collect(toList());
     }
