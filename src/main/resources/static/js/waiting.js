@@ -38,12 +38,12 @@ function startGame(){
     $.post(url)
         .done(function(){
             console.log("game starting...");
-            setTimeout(
-                function()
-                {
+//            setTimeout(
+//                function()
+//                {
                     gameurl = "../game.html?gp=" + getParameterByName("gp");
                     location.href = gameurl;
-                }, 5000);
+//                }, 5000);
         })
         .fail(function(){
             console.log("can\'t start the game");

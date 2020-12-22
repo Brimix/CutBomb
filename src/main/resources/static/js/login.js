@@ -8,7 +8,7 @@ $('#login-form').on('submit', function (event) {
 //            $('#loginSuccess').show( "slow" ).delay(2000).hide( "slow" );
             $("#Username").val("");
             $("#Password").val("");
-            location.href = "main.html";
+//            location.href = "main.html";
 //            updateJson();
 //            $("#createGameForm").show();
 //            $("#registerForm").hide();
