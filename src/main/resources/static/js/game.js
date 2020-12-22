@@ -10,7 +10,6 @@ function processData(urlGameView){
             var HTML = "";
             data.opponents.forEach( function(opponent){
                 HTML += "<tr>" + PlayerView(opponent) + "</tr>";
-//                document.getElementById(opponentID).innerHTML = PlayerView(opponent);
             });
             HTML += "<tr>" + PlayerView(data.me) + "</tr>";
             document.getElementById("player-table-game").innerHTML = HTML;
@@ -30,8 +29,30 @@ function PlayerView(data){
     var HTML = "";
     HTML += "<td><center><h2>" + data.username + "</h2></center></td>";
     data.cards.forEach(function(card){
-        HTML += "<td>" + card.face + "</td>";
+//        HTML += "<td>" + card.face + "</td>";
+        HTML += "<td><button type=\"submit\""
+                + "class=\"form-control\""
+                + "form=\"flip-form\""
+                + "onclick=\"selectCard(" + card.id + ")\""
+                + ">" + card.face + "</button></td>";
     });
     HTML += "<td>" + ((data.current == true) ? "PLAYS" : "") + "</td>";
     return HTML;
 }
+
+var cardSelected = -1;
+function selectCard(cardid){
+    cardSelected = cardid;
+}
+
+$('#flip-form').on('submit', function (event){
+    console.log("submitted!");
+    url = "../api/game/" + getParameterByName("gp") + "/card/" + cardSelected;
+    $.post(url)
+        .done(function(data){
+            console.log("card flipped!");
+        })
+        .fail(function(data){
+            console.log("couldn't flip card");
+        });
+});
