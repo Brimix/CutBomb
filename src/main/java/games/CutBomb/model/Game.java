@@ -1,6 +1,5 @@
 package games.CutBomb.model;
 
-import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -23,14 +22,18 @@ public class Game {
     @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
     private Set<GamePlay> gamePlays;
 
-    @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
-    private Set<Card> cards;
+    @OneToMany(fetch = FetchType.EAGER)
+    private Set<Card> deck;
+    @OneToMany(fetch = FetchType.EAGER)
+    private Set<Card> discarded;
 
     //~ Constructors
     public Game() {
         this.created = new Date();
+        this.started = null;
         this.gamePlays = new HashSet<>();
-        this.cards = new HashSet<>();
+        this.deck = new HashSet<>();
+        this.discarded = new HashSet<>();
     }
     public Game(int capacity){
         this();
@@ -49,9 +52,16 @@ public class Game {
     public void setHost(GamePlay host) { this.host = host; }
     public Set<GamePlay> getGamePlays() { return gamePlays; }
     public void setGamePlays(Set<GamePlay> gamePlays) { this.gamePlays = gamePlays; }
-    public Set<Card> getCards() { return cards; }
-    public void setCards(Set<Card> cards) { this.cards = cards; }
+    public Set<Card> getDeck() { return deck; }
+    public void setDeck(Set<Card> deck) { this.deck = deck; }
+    public Set<Card> getDiscarded() { return discarded; }
+    public void setDiscarded(Set<Card> discarded) { this.discarded = discarded; }
 
     //~ Methods
     public int numberOfPlayers(){ return this.gamePlays.size(); }
+    public boolean discard(Card card){
+        if(!deck.contains(card)) return false;
+        deck.remove(card); discarded.add(card);
+        return true;
+    }
 }
