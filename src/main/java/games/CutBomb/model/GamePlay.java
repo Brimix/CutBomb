@@ -24,12 +24,12 @@ public class GamePlay {
     @JoinColumn(name = "GameID")
     private Game game;
 
-    @OneToMany(mappedBy = "gamePlay", fetch = FetchType.EAGER)
-    private Set<Card> cards;
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Card> cards;
 
     //~ Constructors
     public GamePlay(){
-        this.cards = new HashSet<>();
+        this.cards = new ArrayList<>();
         this.current = false;
         this.joined = new Date();
     }
@@ -52,8 +52,8 @@ public class GamePlay {
     public void setPlayer(Player player) { this.player = player; }
     public Game getGame() { return game; }
     public void setGame(Game game) { this.game = game; }
-    public Set<Card> getCards() { return cards; }
-    public void setCards(Set<Card> cards) { this.cards = cards; }
+    public List<Card> getCards() { return cards; }
+    public void setCards(List<Card> cards) { this.cards = cards; }
     public boolean isCurrent() { return current; }
     public void setCurrent(boolean current) { this.current = current; }
     public Date getJoined() { return joined; }
