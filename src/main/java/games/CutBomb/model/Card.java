@@ -26,7 +26,7 @@ public class Card {
     public Card(){ }
     public Card(String type, Game game) {
         this.type = type;
-        this.game = game; game.getCards().add(this);
+        this.game = game; game.getDeck().add(this);
         this.hidden = true;
     }
 

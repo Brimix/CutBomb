@@ -155,7 +155,7 @@ public class GameController {
     void dealCards(Game game){
         int n = game.numberOfPlayers();
         List<GamePlay> player = game.getGamePlays().stream().collect(toList());
-        List<Card> deck = game.getCards().stream().collect(toList());
+        List<Card> deck = game.getDeck().stream().collect(toList());
 
         shuffle(deck);
         for(int i = 0; i < deck.size(); i++) player.get(i%n).addCard(deck.get(i));
