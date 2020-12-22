@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -69,11 +70,12 @@ public class CutBombApplication {
 		GP.add(new GamePlay("Good", C, G2));
 		GP.add(new GamePlay("Bad", D, G2));
 		GP.add(new GamePlay("Bad", E, G2));
+		Date now = new Date();
 		GP.add(new GamePlay(A, G3));
-		GP.add(new GamePlay(B, G3));
-		GP.add(new GamePlay(C, G3));
-		GP.add(new GamePlay(D, G3));
-		GP.add(new GamePlay(E, G3));
+		GP.add(new GamePlay(B, G3)); GP.get(7).setJoined(new Date(now.getTime() + 5000));
+		GP.add(new GamePlay(C, G3)); GP.get(8).setJoined(new Date(now.getTime() + 10000));
+		GP.add(new GamePlay(D, G3)); GP.get(9).setJoined(new Date(now.getTime() + 15000));
+		GP.add(new GamePlay(E, G3)); GP.get(10).setJoined(new Date(now.getTime() + 20000));
 
 		Random rand = new Random();
 		GP.get(rand.nextInt(3)).setCurrent(true);
