@@ -18,10 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static games.CutBomb.Util.isGuest;
@@ -92,9 +89,9 @@ public class GamePlayController {
         Map<String, Object> ret = makeMap("OK", "You flipped a card!");
 
         Set<String> deck = game.getDeck().stream().map(cd -> cd.getType()).collect(toSet());
-        if(!deck.contains("bomb")) game.setState("Bomb exploded!");
-        else if(!deck.contains("wire")) game.setState("Bomb defused!");
-        else if(game.getDeck().size() == game.getGamePlays().size()) game.setState("Time out!");
+        if(!deck.contains("bomb")){ game.setState("Bomb exploded!"); endGame(game); }
+        else if(!deck.contains("wire")){ game.setState("Bomb defused!"); endGame(game); }
+        else if(game.getDeck().size() == game.getGamePlays().size()){ game.setState("Time out!"); endGame(game); }
         else if(game.getDeck().size()%game.getGamePlays().size() == 0){
             game.setPaused(true);
             game.setState("Round over! Dealing cards again...");
@@ -134,5 +131,10 @@ public class GamePlayController {
         for(int i = 0; i < deck.size(); i++) player.get(i%n).addCard(deck.get(i));
 
         gp_rep.saveAll(player);
+    }
+    void endGame(Game game){
+        game.setPaused(true);
+        game.setFinished(new Date());
+        game = game_rep.save(game);
     }
 }

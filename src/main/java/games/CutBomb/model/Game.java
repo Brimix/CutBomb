@@ -14,6 +14,7 @@ public class Game {
     private long id;
     private Date created;
     private Date started;
+    private Date finished;
     private int capacity;
     private boolean paused;
     private String state;
@@ -33,6 +34,7 @@ public class Game {
     public Game() {
         this.created = new Date();
         this.started = null;
+        this.finished = null;
         this.paused = false;
         this.gamePlays = new HashSet<>();
         this.deck = new HashSet<>();
@@ -49,6 +51,8 @@ public class Game {
     public void setCreated(Date created) { this.created = created; }
     public Date getStarted() { return started; }
     public void setStarted(Date started) { this.started = started; }
+    public Date getFinished() { return finished; }
+    public void setFinished(Date finished) { this.finished = finished; }
     public boolean isPaused() { return paused; }
     public void setPaused(boolean paused) { this.paused = paused; }
     public String getState() { return state; }
