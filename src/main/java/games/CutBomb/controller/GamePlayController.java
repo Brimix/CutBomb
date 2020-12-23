@@ -39,23 +39,23 @@ public class GamePlayController {
     @Autowired
     CardRepository card_rep;
 
-    @RequestMapping(path = "/GameView/{id}", method = RequestMethod.GET)
-    public GameViewDTO GameView(@PathVariable Long id){
-        GamePlay gamePlay = gp_rep.findById(id).orElse(null);
+    @RequestMapping(path = "/GameView/{gamePlayID}", method = RequestMethod.GET)
+    public GameViewDTO gameView(Authentication auth, @PathVariable Long gamePlayID){
+        GamePlay gamePlay = gp_rep.findById(gamePlayID).orElse(null);
         if(gamePlay == null)
             return null;
         return new GameViewDTO(gamePlay);
     }
 
-    @RequestMapping(path = "game/{gpid}/card/{id}", method = RequestMethod.POST)
-    public ResponseEntity<Object> FlipCard(Authentication auth, @PathVariable Long gpid, @PathVariable Long id){
+    @RequestMapping(path = "game/{gamePlayID}/card/{cardID}", method = RequestMethod.POST)
+    public ResponseEntity<Object> flipCard(Authentication auth, @PathVariable Long gamePlayID, @PathVariable Long cardID){
         if(isGuest(auth))
             return new ResponseEntity<>(makeMap("error", "You're not logged in."), HttpStatus.UNAUTHORIZED);
         Player player = player_rep.findByUsername(auth.getName()).orElse(null);
         if(player == null)
             return new ResponseEntity<>(makeMap("error", "Player not in database."), HttpStatus.INTERNAL_SERVER_ERROR);
 
-        GamePlay gamePlay = gp_rep.findById(gpid).orElse(null);
+        GamePlay gamePlay = gp_rep.findById(gamePlayID).orElse(null);
         if(gamePlay == null)
             return new ResponseEntity<>(makeMap("error", "Invalid GamePlay-ID."), HttpStatus.FORBIDDEN);
         if(!player.getGamePlays().contains(gamePlay))
@@ -69,7 +69,7 @@ public class GamePlayController {
         if(game.isPaused())
             return new ResponseEntity<>(makeMap("error", "Round has finished"), HttpStatus.FORBIDDEN);
 
-        Card card = card_rep.findById(id).orElse(null);
+        Card card = card_rep.findById(cardID).orElse(null);
         if(card == null)
             return new ResponseEntity<>(makeMap("error", "Invalid Card-ID"), HttpStatus.FORBIDDEN);
         if(!game.getDeck().contains(card))
@@ -104,9 +104,9 @@ public class GamePlayController {
         return new ResponseEntity<>(ret, HttpStatus.ACCEPTED);
     }
 
-    @RequestMapping(path = "game/{gpid}/deal", method = RequestMethod.POST)
-    public ResponseEntity<Object> nextRound(@PathVariable Long gpid){
-        GamePlay gamePlay = gp_rep.findById(gpid).orElse(null);
+    @RequestMapping(path = "game/{gamePlayID}/deal", method = RequestMethod.POST)
+    public ResponseEntity<Object> nextRound(Authentication auth, @PathVariable Long gamePlayID){
+        GamePlay gamePlay = gp_rep.findById(gamePlayID).orElse(null);
         if(gamePlay == null)
             return new ResponseEntity<>(makeMap("error", "Invalid GamePlay-ID."), HttpStatus.FORBIDDEN);
 
@@ -119,7 +119,7 @@ public class GamePlayController {
         dealCards(game);
         game.setPaused(false);
         game.setState("New round started!");
-        game_rep.save(game);
+        game_rep.save(game); gp_rep.saveAll(game.getGamePlays());
         return new ResponseEntity<>(makeMap("OK", "Cards are dealt."), HttpStatus.ACCEPTED);
     }
     void dealCards(Game game){

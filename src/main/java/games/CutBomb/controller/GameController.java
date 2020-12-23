@@ -43,9 +43,9 @@ public class GameController {
         return game_rep.findAll().stream().map(game -> new GameDTO(game)).collect(toList());
     }
 
-    @RequestMapping(path = "/PlayersInGame/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Object> PlayersList(@PathVariable Long id){
-        GamePlay gamePlay = gp_rep.findById(id).orElse(null);
+    @RequestMapping(path = "/PlayersInGame/{gamePlayID}", method = RequestMethod.GET)
+    public ResponseEntity<Object> getPlayers(Authentication auth, @PathVariable Long gamePlayID){
+        GamePlay gamePlay = gp_rep.findById(gamePlayID).orElse(null);
         if(gamePlay == null)
             return new ResponseEntity<>(makeMap("error", "Invalid GamePlay-ID."), HttpStatus.FORBIDDEN);
 
@@ -83,15 +83,15 @@ public class GameController {
         return new ResponseEntity<>(makeMap("gpid", gamePlay.getId()), HttpStatus.CREATED);
     }
 
-    @RequestMapping(path = "/JoinGame/{id}", method = RequestMethod.POST)
-    public ResponseEntity<Object> join(Authentication auth, @PathVariable Long id) {
+    @RequestMapping(path = "/JoinGame/{gameID}", method = RequestMethod.POST)
+    public ResponseEntity<Object> join(Authentication auth, @PathVariable Long gameID) {
         if(isGuest(auth))
             return new ResponseEntity<>(makeMap("error", "You're not logged in."), HttpStatus.UNAUTHORIZED);
         Player player = player_rep.findByUsername(auth.getName()).orElse(null);
         if(player == null)
             return new ResponseEntity<>(makeMap("error", "Player not in database."), HttpStatus.INTERNAL_SERVER_ERROR);
 
-        Game game = game_rep.findById(id).orElse(null);
+        Game game = game_rep.findById(gameID).orElse(null);
         if(game == null)
             return new ResponseEntity<>(makeMap("error", "Invalid Game-ID."), HttpStatus.FORBIDDEN);
         if(game.getGamePlays().stream().anyMatch(gp -> (player == gp.getPlayer())))
@@ -106,15 +106,15 @@ public class GameController {
         gp_rep.save(gamePlay);
         return new ResponseEntity<>(makeMap("gpid", gamePlay.getId()), HttpStatus.CREATED);
     }
-    @RequestMapping(path = "/StartGame/{id}", method = RequestMethod.POST)
-    public ResponseEntity<Object> start(Authentication auth, @PathVariable Long id) {
+    @RequestMapping(path = "/StartGame/{gamePlayID}", method = RequestMethod.POST)
+    public ResponseEntity<Object> start(Authentication auth, @PathVariable Long gamePlayID) {
         if(isGuest(auth))
             return new ResponseEntity<>(makeMap("error", "You're not logged in."), HttpStatus.UNAUTHORIZED);
         Player player = player_rep.findByUsername(auth.getName()).orElse(null);
         if(player == null)
             return new ResponseEntity<>(makeMap("error", "Player not in database."), HttpStatus.INTERNAL_SERVER_ERROR);
 
-        GamePlay gamePlay = gp_rep.findById(id).orElse(null);
+        GamePlay gamePlay = gp_rep.findById(gamePlayID).orElse(null);
         if(gamePlay == null)
             return new ResponseEntity<>(makeMap("error", "Invalid GamePlay-ID."), HttpStatus.FORBIDDEN);
         if(!player.getGamePlays().contains(gamePlay))
