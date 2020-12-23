@@ -17,6 +17,7 @@ public class GameViewDTO {
     private String role;
     private InGamePlayer me;
     private List<InGamePlayer> opponents;
+    private String state;
 
     public GameViewDTO(GamePlay gamePlay){
         this.id = gamePlay.getId();
@@ -30,11 +31,13 @@ public class GameViewDTO {
             .filter(gp -> (gp != gamePlay))
             .map(gp -> new InGamePlayer(gp, true))
             .collect(toList());
+        this.state = game.getState();
     }
 
     public long getId() { return id; }
     public int getNumberOfCards() { return numberOfCards; }
     public String getRole() { return role; }
+    public String getState() { return state; }
     public InGamePlayer getMe(){ return me; }
     public List<InGamePlayer> getOpponents() { return opponents; }
 }
