@@ -15,6 +15,8 @@ public class Game {
     private Date created;
     private Date started;
     private int capacity;
+    private boolean paused;
+    private String state;
 
     @OneToOne(fetch=FetchType.EAGER)
     private GamePlay host;
@@ -31,6 +33,7 @@ public class Game {
     public Game() {
         this.created = new Date();
         this.started = null;
+        this.paused = false;
         this.gamePlays = new HashSet<>();
         this.deck = new HashSet<>();
         this.discarded = new HashSet<>();
@@ -46,6 +49,10 @@ public class Game {
     public void setCreated(Date created) { this.created = created; }
     public Date getStarted() { return started; }
     public void setStarted(Date started) { this.started = started; }
+    public boolean isPaused() { return paused; }
+    public void setPaused(boolean paused) { this.paused = paused; }
+    public String getState() { return state; }
+    public void setState(String state) { this.state = state; }
     public int getCapacity() { return capacity; }
     public void setCapacity(int capacity) { this.capacity = capacity; }
     public GamePlay getHost() { return host; }
