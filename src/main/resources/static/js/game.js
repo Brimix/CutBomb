@@ -36,8 +36,11 @@ function processData(){
         HTML += "<tr>" + PlayerView(opponent) + "</tr>";
     });
     HTML += "<tr>" + PlayerView(gameViewData.me) + "</tr>";
-//    console.log(HTML);
     document.getElementById("player-table-game").innerHTML = HTML;
+    document.getElementById("blanks").innerHTML = gameViewData.blanks;
+    document.getElementById("wires").innerHTML = gameViewData.wires;
+    document.getElementById("bombs").innerHTML = gameViewData.bombs;
+
 }
 
 function getParameterByName(name) {

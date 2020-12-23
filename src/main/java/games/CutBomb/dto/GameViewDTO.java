@@ -18,13 +18,19 @@ public class GameViewDTO {
     private InGamePlayer me;
     private List<InGamePlayer> opponents;
     private String state;
+    private long blanks;
+    private long wires;
+    private long bombs;
 
     public GameViewDTO(GamePlay gamePlay){
         this.id = gamePlay.getId();
         this.numberOfCards = gamePlay.getCards().size();
         this.role = gamePlay.getRole();
+        this.blanks = gamePlay.getCards().stream().filter(card -> (card.getType() == "blank")).count();
+        this.wires = gamePlay.getCards().stream().filter(card -> (card.getType() == "wire")).count();
+        this.bombs = gamePlay.getCards().stream().filter(card -> (card.getType() == "bomb")).count();
 
-        this.me = new InGamePlayer(gamePlay, false);
+        this.me = new InGamePlayer(gamePlay, true);
         Game game = gamePlay.getGame();
         this.opponents = game.getGamePlays().stream()
             .sorted(Comparator.comparing(GamePlay::getJoined))
@@ -38,6 +44,9 @@ public class GameViewDTO {
     public int getNumberOfCards() { return numberOfCards; }
     public String getRole() { return role; }
     public String getState() { return state; }
+    public long getBlanks() { return blanks; }
+    public long getWires() { return wires; }
+    public long getBombs() { return bombs; }
     public InGamePlayer getMe(){ return me; }
     public List<InGamePlayer> getOpponents() { return opponents; }
 }
