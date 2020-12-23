@@ -61,8 +61,12 @@ public class GamePlay {
 
     //~ Methods
     public void addCard(Card card){
-        this.cards.add(card);
         card.setGamePlay(this);
+        this.cards.add(card);
+    }
+    public void returnCards(){
+        for(Card card : cards) card.setGamePlay(null);
+        this.cards = new ArrayList<>();
     }
     public boolean isHost(){
         return (this == game.getHost());
