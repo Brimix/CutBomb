@@ -18,8 +18,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import static games.CutBomb.Util.isGuest;
 import static games.CutBomb.Util.makeMap;
+import static java.util.Collections.shuffle;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 @RestController
 @RequestMapping("/api")
@@ -60,6 +69,8 @@ public class GamePlayController {
         Game game = gamePlay.getGame();
         if(game == null)
             return new ResponseEntity<>(makeMap("error", "Game not in database"), HttpStatus.INTERNAL_SERVER_ERROR);
+        if(game.isPaused())
+            return new ResponseEntity<>(makeMap("error", "Round has finished"), HttpStatus.FORBIDDEN);
 
         Card card = card_rep.findById(id).orElse(null);
         if(card == null)
@@ -78,8 +89,50 @@ public class GamePlayController {
         gamePlay.setCurrent(false);
         target.setCurrent(true);
 
+        Map<String, Object> ret = makeMap("OK", "You flipped a card!");
+
+        Set<String> deck = game.getDeck().stream().map(cd -> cd.getType()).collect(toSet());
+        if(!deck.contains("bomb")) game.setState("Bomb exploded!");
+        else if(!deck.contains("wire")) game.setState("Bomb defused!");
+        else if(game.getDeck().size() == game.getGamePlays().size()) game.setState("Time out!");
+        else if(game.getDeck().size()%game.getGamePlays().size() == 0){
+            game.setPaused(true);
+            game.setState("Round over! Dealing cards again...");
+            ret.replace("OK", "Deal again");
+        }
+        else game.setState(gamePlay.getPlayer().getUsername() + " flipped a " + card.getType());
+
         game_rep.save(game); card_rep.save(card);
         gp_rep.save(gamePlay); gp_rep.save(target);
-        return new ResponseEntity<>("You flipped a card!", HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(ret, HttpStatus.ACCEPTED);
+    }
+
+    @RequestMapping(path = "game/{gpid}/deal", method = RequestMethod.POST)
+    public ResponseEntity<Object> nextRound(@PathVariable Long gpid){
+        GamePlay gamePlay = gp_rep.findById(gpid).orElse(null);
+        if(gamePlay == null)
+            return new ResponseEntity<>(makeMap("error", "Invalid GamePlay-ID."), HttpStatus.FORBIDDEN);
+
+        Game game = gamePlay.getGame();
+        if(game == null)
+            return new ResponseEntity<>(makeMap("error", "Game not in database"), HttpStatus.INTERNAL_SERVER_ERROR);
+
+        for(GamePlay gp : game.getGamePlays()) gp.returnCards();
+        for(Card card : game.getDeck()) card.setHidden(true);
+        dealCards(game);
+        game.setPaused(false);
+        game.setState("New round started!");
+        game_rep.save(game);
+        return new ResponseEntity<>(makeMap("OK", "Cards are dealt."), HttpStatus.ACCEPTED);
+    }
+    void dealCards(Game game){
+        int n = game.numberOfPlayers();
+        List<GamePlay> player = game.getGamePlays().stream().collect(toList());
+        List<Card> deck = game.getDeck().stream().collect(toList());
+
+        shuffle(deck);
+        for(int i = 0; i < deck.size(); i++) player.get(i%n).addCard(deck.get(i));
+
+        gp_rep.saveAll(player);
     }
 }
