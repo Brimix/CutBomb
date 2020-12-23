@@ -150,6 +150,7 @@ public class GameController {
         Random rnd = new Random();
         int starter_id = rnd.nextInt(n);
         player.get(starter_id).setCurrent(true);
+        game.setState("Game has just started!");
     }
 
     void dealCards(Game game){
