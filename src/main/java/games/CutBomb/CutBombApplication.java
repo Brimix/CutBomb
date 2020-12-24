@@ -139,8 +139,9 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/admin/**").hasAuthority("ADMIN")
 				.antMatchers("/login.html").permitAll()
 				.antMatchers("/js/**").permitAll()
+				.antMatchers("/css/**").permitAll()
 				.antMatchers("/api/login").permitAll()
-				.antMatchers("/api/signup").permitAll()
+				.antMatchers("/api/register").permitAll()
 				.antMatchers("/api/logout").permitAll()
 				.antMatchers("/**").hasAuthority("USER");
 		http.formLogin() // Don't forget to check for "already logged in"

@@ -1,30 +1,65 @@
+showMessage("", "result-default");
+
 $('#login-form').on('submit', function (event) {
     event.preventDefault();
     $.post("/api/login",
-        { user: $("#Username").val(),
-          pass: $("#Password").val() })
+        { user: $("#logUser").val(),
+          pass: $("#logPass").val() })
         .done(function() {
             console.log("login ok");
-//            $('#loginSuccess').show( "slow" ).delay(2000).hide( "slow" );
-            $("#Username").val("");
-            $("#Password").val("");
-//            location.href = "main.html";
-//            updateJson();
-//            $("#createGameForm").show();
-//            $("#registerForm").hide();
-
+            showMessage("Logged in as " + $("#logUser").val(), "result-ok");
+            $("#logUser").val("");
+            $("#logPass").val("");
+//            setTimeout( function(){ location.href = "main.html"; }, 4000);
         })
-        .fail(function() {
+        .fail(function(data) {
             console.log("login failed");
-//            $('#loginFailed').show( "slow" ).delay(2000).hide( "slow" );
-            $("#Username").val("");
-            $("#Password").val("");
-            $("#Username").focus();
-            // $('#loginFailed').hide( "slow" );
+            console.log(data);
+            showMessage("Login failed", "result-error");
+            $("#logUser").val("");
+            $("#logPass").val("");
+            $("#logUser").focus();
         })
         .always(function() {
         });
 });
+
+$('#register-form').on('submit', function(event){
+    event.preventDefault();
+    $.post("api/register",
+        { user: $("#regUser").val(),
+          pass: $("#regPass").val() })
+        .done(function(){
+            console.log("register ok");
+            showMessage("Registered as a new player!", "result-ok");
+            setTimeout( function(){
+                showMessage("Logging in as:" + $("#logUser").val(), "result-ok");
+                $.post("/api/login",
+                    { user: $("#regUser").val(),
+                      pass: $("#regPass").val() })
+                    .done(function() {
+                        console.log("login ok");
+                        showMessage("Logged in as " + $("#logUser").val(), "result-ok");
+                        $("#regUser").val("");
+                        $("#regPass").val("");
+//                        setTimeout( function(){ location.href = "main.html"; }, 4000);
+                    })
+                    .fail(function(data) {
+                        console.log("Fatal error. Contact admin.");
+                        showMessage("Fatal error. Contact admin.", "result-error");
+                    });
+            }, 1000);
+
+        })
+        .fail(function(data){
+            console.log("register fail");
+//            showMessage(data.responseJSON.error);
+            $("#regUser").val("");
+            $("#regPass").val("");
+            $("#regUser").focus();
+        });
+});
+
 
 $('#logout-form').on('submit', function (event) {
     event.preventDefault();
@@ -41,3 +76,13 @@ $('#logout-form').on('submit', function (event) {
 
         });
 });
+
+function showMessage(msg, classType){
+    var HTML = "";
+    HTML += "<center><h2 class=\"" + classType + "\">"
+            + msg
+            + "</h2></center>";
+    document.getElementById("logInfo").innerHTML = HTML;
+    if(msg != "")
+        setTimeout( function(){ showMessage("", "result-default"); }, 3000);
+}

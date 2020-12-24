@@ -3,39 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <title>Log in!</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/form.css">
 </head>
 <body>
-    <table width="100%">
-        <tr>
-            <td>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="entering-form">
                 <center><h2> Log in </h2></center>
                 <form id="login-form" onsubmit="return false">
-                    <center> <label for="Username">Username:</label> <input class="form-control" id="Username" type="text" name="Name" required> </center> <br>
-                    <center> <label for="Password">Password:</label> <input class="form-control" id="Password" type="password" name="Password" required> </center> <br>
+                    <center> <label for="logUser">Username:</label> <input class="form-control" id="logUser" type="text" name="Name" required> </center> <br>
+                    <center> <label for="logPass">Password:</label> <input class="form-control" id="logPass" type="password" name="Password" required> </center> <br>
                     <div> <center>
-                        <button class="form-control submitbutton btn" type="submit"> Log in </button>
+                        <button class="form-control submitbutton btn btn-info" type="submit"> Log in </button>
                     </center> </div>
                 </form>
-            </td>
-            <td>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="entering-form">
                 <center><h2> Register </h2></center>
                 <form id="register-form" onsubmit="return false">
-                    <center> <label for="regUsername">Username:</label> <input class="form-control" id="regUsername" type="text" name="regName" required> </center> <br>
-                    <center> <label for="regPassword">Password:</label> <input class="form-control" id="regPassword" type="password" name="regPassword" required> </center> <br>
+                    <center> <label for="regUser">Username:</label> <input class="form-control" id="regUser" type="text" name="regName" required> </center> <br>
+                    <center> <label for="regPass">Password:</label> <input class="form-control" id="regPass" type="password" name="regPassword" required> </center> <br>
                     <div><center>
-                        <input class="form-control submitbutton btn" type="submit" value="Sign Up"/>
+                        <input class="form-control submitbutton btn btn-warning" type="submit" value="Sign Up"/>
                     </center></div>
                 </form>
-            </td>
-        </tr>
-    </table>
-    <br><br><br><br>
-    <form id="logout-form" onsubmit="return false">
-        <center> <button type="submit" class="btn btn-info">Log out</button> </center>
-    </form>
+            </div>
+        </div>
+    </div>
+<div id="logInfo"></div>
 
+
+<script src="./js/popper.min.js"></script>
 <script src="./js/jquery.js"></script>
-<!--<script src="./js/bootstrap.min.js"></script>-->
+<script src="./js/bootstrap.min.js"></script>
 <script src="./js/login.js"></script>
 </body>
 </html>
