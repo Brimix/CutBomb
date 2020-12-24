@@ -1,0 +1,18 @@
+th{
+    text-align: center;
+}
+
+.cell{
+    height: 70px;
+}
+
+.cell-spade{
+    border: none;
+}
+
+.card{
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    border: none;
+}

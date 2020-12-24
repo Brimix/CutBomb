@@ -15,7 +15,7 @@ function loadData(){
 //            console.log(gameViewData);
             gameViewData = data;
         })
-        .fail(function(){
+        .fail(function(data){
             console.log("couldn't retrieve gameplay");
 //            console.log(data.error);
         });
@@ -26,9 +26,9 @@ function processData(){
     document.getElementById("game-log").innerHTML = gameViewData.state;
 
     var HTML = "";
-    HTML += "<th> Player </th>"
-            + "<th colspan = " + gameViewData.numberOfCards + "> Cards </th>"
-            + "<th> Spade </th>";
+    HTML += "<th width=\"40%\"> Player </th>"
+            + "<th  width=\"50%\" colspan = " + gameViewData.numberOfCards + "> Cards </th>";
+//            + "<th  width=\"10%\"> Spade </th>";
     document.getElementById("player-table-header").innerHTML = HTML;
 
     HTML = "";
@@ -52,18 +52,12 @@ function PlayerView(player){
     var HTML = "";
     HTML += "<td><center><h2>" + player.username + "</h2></center></td>";
     player.cards.forEach(function(card){
-        if(canFlip(player.id, card.face)){
-            HTML += "<td><button type=\"submit\""
-                    + "class=\"form-control\""
-                    + "form=\"flip-form\""
-                    + "onclick=\"selectCard(" + card.id + ")\""
-                    + ">" + card.face + "</button></td>";
-        }
-        else {
-            HTML += "<td>" + card.face + "</td>";
-        }
+        if(canFlip(player.id, card.face)) HTML += clickableButton(card.id, card.face);
+        else HTML += notClickableButton(card.face);
     });
-    HTML += "<td>" + ((player.current == true) ? "PLAYS" : "") + "</td>";
+    if(player.current == true){
+        HTML += "<td class=\"cell\"><img class=\"card\" src=\"img/pliers.png\" alt=\"pliers.png\"></td>";
+    }
     return HTML;
 }
 function canFlip(gpid, face){
@@ -118,4 +112,20 @@ function dealAgain(){
             console.log("Failed to deal cards");
             console.log(data.responseJSON.error);
         });
+}
+
+function clickableButton(id, face){
+    return "<td class=\"cell\">"
+            + "<input type=\"image\" "
+            + "class=\"form-control\" \"card\" "
+            + "src=\"img/" + face + ".png\" "
+            + "alt=\"" + face + ".png\" "
+            + "form=\"flip-form\" "
+            + "onclick=\"selectCard(" + id + ")\"></td>";
+}
+
+function notClickableButton(face){
+    return "<td class=\"cell\">"
+    + "<img class=\"card\" src=\"img/" + face + ".png\" alt=\"" + face + ".png\">";
+    + "</td>";
 }
