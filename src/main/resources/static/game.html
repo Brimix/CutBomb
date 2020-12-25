@@ -9,29 +9,33 @@
 </head>
 
 <body>
-    <center> <h1> The game has started! </h1> </center>
-    <center> <h2 id="role"> </h2> </center>
-    <center> <h2 id="game-log"> </h2> </center>
+    <div id="role"></div>
+    <div id="game-log"></div>
 
     <form id="flip-form" onsubmit="return false"> </form>
-    <table border="solid black" width="100%">
-        <tr id="player-table-header">
-        </tr>
+    <center><table border="solid black" id="game-table">
+        <tr id="player-table-header"> </tr>
         <tbody id="player-table-game"> </tbody>
-    </table>
-
-    <center><table border="solid black" width="40%">
-        <tr>
-            <th> Blanks </th>
-            <th> Wires </th>
-            <th> Bombs </th>
-        </tr>
-        <tr>
-            <td id="blanks"></td>
-            <td id="wires"></td>
-            <td id="bombs"></td>
-        </tr>
     </table></center>
+
+<!--    <center><table border="solid black" width="40%">-->
+<!--        <tr>-->
+<!--            <th> Blanks </th>-->
+<!--            <th> Wires </th>-->
+<!--            <th> Bombs </th>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <td id="blanks"></td>-->
+<!--            <td id="wires"></td>-->
+<!--            <td id="bombs"></td>-->
+<!--        </tr>-->
+<!--    </table></center>-->
+
+    <div class="row" id="card-box">
+        <div class="col-sm-4" id="wires2"></div>
+        <div class="col-sm-4" id="blanks2"></div>
+        <div class="col-sm-4" id="bombs2"></div>
+    </div>
 
 
 <script src="./js/popper.min.js"></script>
@@ -40,11 +44,3 @@
 <script src="./js/game.js"></script>
 </body>
 </html>
-
-<!--        <div class = "row">-->
-<!--            <div class = "col"> <ol id="gp1"> </ol> </div>-->
-<!--            <div class = "col"> <ol id="gp2"> </ol> </div>-->
-<!--        </div>-->
-<!--        <div class = "row">-->
-<!--            <center><div class = "col-sm-6"> <ol id="me"> </ol> </div></center>-->
-<!--        </div>-->

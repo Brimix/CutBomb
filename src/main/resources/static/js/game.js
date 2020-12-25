@@ -1,10 +1,16 @@
-var gameViewData = {};
+var gameViewData = "";
+var gameViewDataNew = "";
 updateView();
 
 function updateView(){
     loadData();
-    setTimeout( function(){ processData(); }, 300);
-    setTimeout( function(){ updateView(); }, 4000);
+    if(gameViewData.state != gameViewDataNew.state){
+        console.log(gameViewDataNew);
+        gameViewData = gameViewDataNew;
+        processData();
+    }
+//    setTimeout( function(){ processData(); }, 300);
+    setTimeout( function(){ updateView(); }, 1000);
 }
 
 function loadData(){
@@ -13,7 +19,7 @@ function loadData(){
         .done(function(data){
             console.log("gameplay given!");
 //            console.log(gameViewData);
-            gameViewData = data;
+            gameViewDataNew = data;
         })
         .fail(function(data){
             console.log("couldn't retrieve gameplay");
@@ -22,12 +28,13 @@ function loadData(){
 }
 
 function processData(){
-    document.getElementById("role").innerHTML = "Your role is: " + gameViewData.role;
-    document.getElementById("game-log").innerHTML = gameViewData.state;
+    document.getElementById("role").classList.add((gameViewData.role == "Savior") ? "role-good" : "role-bad");
+    document.getElementById("role").innerHTML = "<h2>Your role is: " + gameViewData.role + "</h2>";
+    document.getElementById("game-log").innerHTML = "<h2>" + gameViewData.state + "</h2>";
 
     var HTML = "";
-    HTML += "<th width=\"40%\"> Player </th>"
-            + "<th  width=\"50%\" colspan = " + gameViewData.numberOfCards + "> Cards </th>";
+    HTML += "<th width=\"30%\"> Player </th>"
+            + "<th  width=\"60%\" colspan = " + gameViewData.numberOfCards + "><center> Cards </center></th>";
 //            + "<th  width=\"10%\"> Spade </th>";
     document.getElementById("player-table-header").innerHTML = HTML;
 
@@ -37,10 +44,12 @@ function processData(){
     });
     HTML += "<tr>" + PlayerView(gameViewData.me) + "</tr>";
     document.getElementById("player-table-game").innerHTML = HTML;
-    document.getElementById("blanks").innerHTML = gameViewData.blanks;
-    document.getElementById("wires").innerHTML = gameViewData.wires;
-    document.getElementById("bombs").innerHTML = gameViewData.bombs;
-
+//    document.getElementById("blanks").innerHTML = gameViewData.blanks;
+//    document.getElementById("wires").innerHTML = gameViewData.wires;
+//    document.getElementById("bombs").innerHTML = gameViewData.bombs;
+    document.getElementById("blanks2").innerHTML = createCardBox("blank", gameViewData.blanks);
+    document.getElementById("wires2").innerHTML = createCardBox("wire", gameViewData.wires);
+    document.getElementById("bombs2").innerHTML = createCardBox("bomb", gameViewData.bombs);
 }
 
 function getParameterByName(name) {
@@ -50,10 +59,12 @@ function getParameterByName(name) {
 
 function PlayerView(player){
     var HTML = "";
-    HTML += "<td><center><h2>" + player.username + "</h2></center></td>";
+    HTML += "<td><h3>" + player.username + "</h2></td>";
     player.cards.forEach(function(card){
+        HTML += "<td class=\"cell\">";
         if(canFlip(player.id, card.face)) HTML += clickableButton(card.id, card.face);
         else HTML += notClickableButton(card.face);
+        HTML += "</td>";
     });
     if(player.current == true){
         HTML += "<td class=\"cell\"><img class=\"card\" src=\"img/pliers.png\" alt=\"pliers.png\"></td>";
@@ -63,13 +74,23 @@ function PlayerView(player){
 function canFlip(gpid, face){
     if(gameViewData.current == false)
         return false;
-//    console.log("Current is you!");
     if(gpid == gameViewData.id)
         return false;
-//    console.log("Your card?");
     if(face != "hidden")
         return false;
     return true;
+}
+function clickableButton(id, face){
+    return  "<input type=\"image\" "
+            + "class=\"card\" "
+            + "src=\"img/" + face + ".png\" "
+            + "alt=\"" + face + ".png\" "
+            + "form=\"flip-form\" "
+            + "onclick=\"selectCard(" + id + ")\">";
+}
+
+function notClickableButton(face){
+    return "<img class=\"card\" src=\"img/" + face + ".png\" alt=\"" + face + ".png\">";
 }
 
 var cardSelected = -1;
@@ -114,18 +135,11 @@ function dealAgain(){
         });
 }
 
-function clickableButton(id, face){
-    return "<td class=\"cell\">"
-            + "<input type=\"image\" "
-            + "class=\"form-control\" \"card\" "
+function createCardBox(face, cnt){
+    var HTML = "";
+    HTML += "<img class=\"card-box-img\" "
             + "src=\"img/" + face + ".png\" "
-            + "alt=\"" + face + ".png\" "
-            + "form=\"flip-form\" "
-            + "onclick=\"selectCard(" + id + ")\"></td>";
-}
-
-function notClickableButton(face){
-    return "<td class=\"cell\">"
-    + "<img class=\"card\" src=\"img/" + face + ".png\" alt=\"" + face + ".png\">";
-    + "</td>";
+            + "alt=\"" + face + ".png\">";
+    HTML += "<div class=\"card-box-num\">" + cnt + "</div>";
+    return HTML;
 }
