@@ -3,13 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <title>Cut the Bomb!</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/default-settings.css">
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
 </head>
 <body>
-<form id="create-form" onsubmit="return false">
-<!--    <input class="btn btn-warning"  type="submit"  id="createGame"  value="CREATE NEW GAME"/>-->
-    <center> <label for="Capacity">Capacity:</label> <input class="form-control" id="Capacity" type="number" name="Capacity" required> </center> <br>
-    <center> <button type="submit" class="btn btn-info"> Create Game </button> </center>
-</form>
+<div id="create-box">
+    <div class="row">
+        <div class="col-sm-4"> Create a new game! </div>
+        <div class="col-sm-6">
+            <form id="create-form" onsubmit="return false">
+                <label for="capacity"> Maximum number of players: </label>
+                <input class="form-control" id="capacity" type="number" name="capacity" required>
+            </form>
+        </div>
+        <div class="col-sm-2">
+            <button type="submit" class="btn btn-info" form="create-form"> Create Game </button>
+        </div>
+    </div>
+</div>
+
 
 <form id="join-form" onsubmit="return false"></form>
 <center> <h1> Open lobbies </h1> </center>

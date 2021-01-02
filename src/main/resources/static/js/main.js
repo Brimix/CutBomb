@@ -19,12 +19,7 @@ function getGameList(){
                 HTML += "<td>" + game.id + "</td>";
                 HTML += "<td>" + game.created + "</td>";
                 HTML += "<td>" + game.occupancy + "/" + game.capacity + "</td>";
-//                HTML += "<td>" + "NOT YET IMP" + "</td>";
-                HTML += "<td><button type=\"submit\""
-                        + "class=\"form-control join-button\""
-                        + "form=\"join-form\""
-                        + "onclick=\"selectGame( " + game.id + ")\""
-                        + ">Join</button></td>";
+                HTML += "<td>" + action(game) + "</td>";
                 HTML += "</tr>";
             });
             document.getElementById("game-table").innerHTML = HTML;
@@ -37,15 +32,16 @@ function getGameList(){
 
 $('#create-form').on('submit', function (event) {
     $.post("/api/CreateGame",
-            { capacity: $("#Capacity").val()})
+            { capacity: $("#capacity").val()})
         .done(function(data){
             console.log("game created");
-            url = "waiting-room.html/?gp=" + data.gpid;
+            url = "waiting'-'room.html?gp=" + data.gpid;
             location.href = url;
         })
         .fail(function(data){
             console.log("game creation failed");
-            console.log(data.error);
+            console.log(data);
+            console.log(data.responseJSON.error);
         });
 });
 
@@ -61,6 +57,38 @@ $('#join-form').on('submit', function (event){
         })
         .fail(function(data){
             console.log("game joining failed");
-            console.log(data.error);
+            console.log(data);
+            console.log(data.responseJSON.error);
         })
 });
+
+function action(game){
+    if((game.state == "waiting") && (game.occupancy < game.capacity))
+        return "<button type=\"submit\""
+               + "class=\"form-control join-button btn btn-warning\""
+               + "form=\"join-form\""
+               + "onclick=\"selectGame( " + game.id + ")\""
+               + ">Join</button>";
+    if(game.alreadyIn)
+        return "<button onclick=\"location.href='" + getGamePlayURL(game) + "'\""
+               + "class=\"form-control btn btn-info\""
+               + ">Enter</button>";
+    return "---";
+}
+
+function getGamePlayURL(game){
+    var url = "/api/game/" + game.id + "/gamePlay";
+    $.get(url)
+        .done(function(data){
+            console.log("gamePlay retrieved");
+            var gpurl = "waiting-room.html?gp=";
+            gpurl += data.gpid;
+            return gpurl;
+        })
+        .fail(function(data){
+            console.log("gamePlay retrieving failed");
+        })
+        .always(function(data){
+           console.log(data);
+        });
+}
