@@ -19,3 +19,9 @@ h2{
     padding-top: 5px;
     padding-bottom: 5px;
 }
+
+.centered{
+    position: relative;
+    top: 50%;
+    transform: translate(0%, -50%);
+}
