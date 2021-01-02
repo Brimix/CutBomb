@@ -3,7 +3,7 @@
     padding: 5px;
     border-style: solid;
     border-radius: 15px;
-    border-color: orange;
+    border-color: yellow;
 }
 .main-box>div{
     margin: 5px;
@@ -20,23 +20,23 @@ label{
 
 .main-banner{
     width: 100%;
-    color: orange;
+    color: yellow;
     text-align: center;
-    border-bottom: solid orange;
+    border-bottom: solid yellow;
     padding-top: 10px;
     padding-bottom: 10px;
 }
 
 th{
     margin-left: 10px;
-    color: orange;
+    color: yellow;
     border: none;
-    border-bottom: solid orange 2px;
+    border-bottom: solid yellow 2px;
 }
 td{
     margin-left: 10px;
     border: none;
-    border-top: solid orange 1px;
+    border-top: solid yellow 1px;
 }
 
 .separator-box{
