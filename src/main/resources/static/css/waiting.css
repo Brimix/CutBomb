@@ -1,0 +1,18 @@
+.player-box{
+    margin: 30px;
+    padding: 5px;
+    border-style: solid;
+    border-radius: 15px;
+    border-color: orange;
+}
+th{
+    margin-left: 10px;
+    color: orange;
+    border: none;
+    border-bottom: solid orange 2px;
+}
+td{
+    margin-left: 10px;
+    border: none;
+    border-top: solid orange 1px;
+}

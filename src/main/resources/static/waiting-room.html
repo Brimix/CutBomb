@@ -3,20 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>Game Lobby</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/default-settings.css">
+    <link rel="stylesheet" type="text/css" href="/css/waiting.css">
 </head>
 <body>
-    <center><h1> Has it started yet? </h1></center>
-    <br> <center> <button onclick="startGame()"> Start! </button> </center>
+    <div class="banner">
+        <center><a href="main.html"><img src="img/CutBomb.png" alt="game logo"></a></center>
+    </div>
 
-    <table border="solid black" width="100%">
-        <tr>
-            <th> <h2> ID </h2> </th>
-            <th> <h2> Player </h2> </th>
-            <th> <h2> Joined at </h2> </th>
-        </tr>
-        <tbody id="players-table"></tbody>
-    </table>
+    <div id="start-box"></div>
 
+    <div class="player-box">
+        <table width="100%">
+            <tr>
+                <th> ID </th>
+                <th> Player </th>
+                <th> Joined at </th>
+                <th></th>
+            </tr>
+            <tbody id="players-table"></tbody>
+        </table>
+    </div>
 <script src="../js/jquery.js"></script>
 <script src="../js/waiting.js"></script>
 </body>
