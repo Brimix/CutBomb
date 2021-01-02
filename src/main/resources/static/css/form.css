@@ -1,15 +1,8 @@
 body{
-    background-color: #111111;
-    text-color: #ffffff;
-}
-
-h2{
-    margin-top: 30px;
-    margin-bottom: 60px;
-}
-
-h1,h2,h3,label{
-    color: #dddddd;
+    position: absolute;
+    top: 50%;
+    transform: translate(0%, -50%);
+    width: 100%;
 }
 
 .entering-form{
@@ -19,6 +12,9 @@ h1,h2,h3,label{
     height: 90%;
 }
 
+.result-default{
+    display: none;
+}
 .result-ok{
     width: 100%;
     background-color: green;
@@ -28,8 +24,4 @@ h1,h2,h3,label{
     width: 100%;
     background-color: red;
     color: white;
-}
-.result-default{
-    width: 100%;
-    display: none;
 }

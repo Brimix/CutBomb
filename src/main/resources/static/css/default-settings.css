@@ -1,0 +1,21 @@
+body{
+    background-color: #111111;
+    text-color: #ffffff;
+}
+
+h2{
+    margin-top: 30px;
+    margin-bottom: 60px;
+}
+
+*{
+    color: #dddddd;
+}
+
+.message-box{
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
