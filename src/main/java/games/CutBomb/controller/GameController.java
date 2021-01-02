@@ -1,7 +1,6 @@
 package games.CutBomb.controller;
 
 import games.CutBomb.dto.GameDTO;
-import games.CutBomb.dto.PlayerInGameDTO;
 import games.CutBomb.model.Card;
 import games.CutBomb.model.Game;
 import games.CutBomb.model.GamePlay;
