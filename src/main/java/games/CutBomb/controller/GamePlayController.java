@@ -1,6 +1,7 @@
 package games.CutBomb.controller;
 
 import games.CutBomb.dto.GameViewDTO;
+import games.CutBomb.dto.WaitingViewDTO;
 import games.CutBomb.model.Card;
 import games.CutBomb.model.Game;
 import games.CutBomb.model.GamePlay;
@@ -38,6 +39,14 @@ public class GamePlayController {
     GamePlayRepository gp_rep;
     @Autowired
     CardRepository card_rep;
+
+    @RequestMapping(path = "/waitingView/{gamePlayID}", method = RequestMethod.GET)
+    public ResponseEntity<Object> waitingView(Authentication auth, @PathVariable Long gamePlayID) {
+        GamePlay gamePlay = gp_rep.findById(gamePlayID).orElse(null);
+        if(gamePlay == null)
+            return new ResponseEntity<>(makeMap("error", "Invalid GamePlay-ID."), HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(new WaitingViewDTO(gamePlay), HttpStatus.ACCEPTED);
+    }
 
     @RequestMapping(path = "/GameView/{gamePlayID}", method = RequestMethod.GET)
     public GameViewDTO gameView(Authentication auth, @PathVariable Long gamePlayID){
