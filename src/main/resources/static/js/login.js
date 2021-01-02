@@ -79,7 +79,7 @@ $('#logout-form').on('submit', function (event) {
 
 function showMessage(msg, classType){
     var HTML = "";
-    HTML += "<center><h2 class=\"" + classType + "\">"
+    HTML += "<center><h2 class=\"message-box " + classType + "\">"
             + msg
             + "</h2></center>";
     document.getElementById("logInfo").innerHTML = HTML;
