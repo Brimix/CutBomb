@@ -71,20 +71,18 @@ function action(game){
                + "onclick=\"selectGame( " + game.id + ")\""
                + ">Join</button>";
     if(game.alreadyIn)
-        return "<button onclick=\"location.href='" + getGamePlayURL(game) + "'\""
+        return "<button onclick=\"enterGamePlay(" + game.id + ")\" "
                + "class=\"form-control btn btn-info\""
                + ">Enter</button>";
     return "---";
 }
 
-function getGamePlayURL(game){
-    var url = "/api/game/" + game.id + "/gamePlay";
+function enterGamePlay(gameID){
+    var url = "/api/game/" + gameID + "/gamePlay";
     $.get(url)
         .done(function(data){
             console.log("gamePlay retrieved");
-            var gpurl = "waiting-room.html?gp=";
-            gpurl += data.gpid;
-            return gpurl;
+            location.href = "waiting-room.html?gp=" + data.gpid;
         })
         .fail(function(data){
             console.log("gamePlay retrieving failed");
