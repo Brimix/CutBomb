@@ -1,18 +1,63 @@
-#create-box{
-    margin: 20px;
-    padding: 20px;
-}
-
-#create-box > div{
+.main-box{
+    margin: 30px;
+    padding: 5px;
     border-style: solid;
     border-radius: 15px;
     border-color: orange;
-    padding: 5px;
+}
+.main-box>div{
+    margin: 5px;
 }
 
-#create-box div{
-    margin-left: auto;
-    margin-right: auto;
-    display: flex;
-    align-items: center
+label{
+    margin-left: 10px;
+    margin-right: 25px;
+}
+
+.boton{
+    right: 5px;
+}
+
+.main-banner{
+    width: 100%;
+    color: orange;
+    text-align: center;
+    border-bottom: solid orange;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+th{
+    margin-left: 10px;
+    color: orange;
+    border: none;
+    border-bottom: solid orange 2px;
+}
+td{
+    margin-left: 10px;
+    border: none;
+    border-top: solid orange 1px;
+}
+
+.separator-box{
+    margin-left: 20px;
+    margin-right: 20px;
+    height: 30px;
+}
+.separator{
+    width: 45%;
+    height: 5px;
+    vertical-align: middle;
+}
+.sep-left{
+}
+.sep-right{
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+}
+
+.separator-text{
+    font-family: Verdana, sans-serif;
+    color: orange;
+    text-align: center;
 }
