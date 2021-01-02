@@ -12,6 +12,8 @@ import static java.util.stream.Collectors.toList;
 public class WaitingViewDTO {
     private List<PlayerInGame> players;
     private boolean host;
+    private boolean started;
+    private int count;
 
     public WaitingViewDTO(GamePlay gamePlay){
         this.players = gamePlay.getGame().getGamePlays().stream()
@@ -19,10 +21,14 @@ public class WaitingViewDTO {
                 .map(gp -> new PlayerInGame(gp))
                 .collect(toList());
         this.host = gamePlay.isHost();
+        this.started = (gamePlay.getGame().getStarted() != null);
+        this.count = players.size();
     }
 
     public List<PlayerInGame> getPlayers() { return players; }
     public boolean isHost() { return host; }
+    public boolean isStarted() { return started; }
+    public int getCount() { return count; }
 }
 
 class PlayerInGame{
