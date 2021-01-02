@@ -6,7 +6,8 @@ import java.util.Date;
 
 public class GameDTO {
     private long id;
-    private Date created;
+    private String created;
+    private String host;
     private int occupancy;
     private int capacity;
     private String state;
@@ -14,20 +15,26 @@ public class GameDTO {
 
     public GameDTO(Game game){
         this.id = game.getId();
-        this.created = game.getCreated();
+        this.created = parseDate(game.getCreated());
+        this.host = game.getHost().getPlayer().getUsername();
         this.occupancy = game.numberOfPlayers();
         this.capacity = game.getCapacity();
         this.state = createState(game);
     }
 
     public long getId() { return id; }
-    public Date getCreated() { return created; }
+    public String getCreated() { return created; }
+    public String getHost() { return host; }
     public int getOccupancy() { return occupancy; }
     public int getCapacity() { return capacity; }
     public String getState() { return state; }
     public boolean isAlreadyIn() { return alreadyIn; }
     public void setAlreadyIn(boolean alreadyIn) { this.alreadyIn = alreadyIn; }
 
+    private String parseDate(Date date){
+        String s = date.toString();
+        return s.substring(0, 19);
+    }
     private String createState(Game game){
         if(game.getFinished() != null) return "finished";
         if(game.getStarted() != null) return "started";

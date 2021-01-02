@@ -18,6 +18,7 @@ function getGameList(){
                 HTML += "<tr>";
                 HTML += "<td>" + game.id + "</td>";
                 HTML += "<td>" + game.created + "</td>";
+                HTML += "<td>" + game.host + "</td>";
                 HTML += "<td>" + game.occupancy + "/" + game.capacity + "</td>";
                 HTML += "<td>" + action(game) + "</td>";
                 HTML += "</tr>";
@@ -35,7 +36,7 @@ $('#create-form').on('submit', function (event) {
             { capacity: $("#capacity").val()})
         .done(function(data){
             console.log("game created");
-            url = "waiting'-'room.html?gp=" + data.gpid;
+            url = "waiting-room.html?gp=" + data.gpid;
             location.href = url;
         })
         .fail(function(data){
