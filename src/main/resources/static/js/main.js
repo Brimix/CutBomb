@@ -53,7 +53,7 @@ $('#join-form').on('submit', function (event){
     $.post(url)
         .done(function(data){
             console.log("game joined");
-            url = "waiting-room.html/?gp=" + data.gpid;
+            url = "waiting-room.html?gp=" + data.gpid;
             location.href = url;
         })
         .fail(function(data){
