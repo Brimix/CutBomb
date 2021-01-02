@@ -3,9 +3,9 @@ body{
     text-color: #ffffff;
 }
 
-h2{
-    margin-top: 30px;
-    margin-bottom: 60px;
+.form-title{
+    margin-top: 20px;
+    margin-bottom: 40px;
 }
 
 *{
