@@ -39,8 +39,34 @@ public class GameController {
     CardRepository card_rep;
 
     @RequestMapping(path = "/games", method = RequestMethod.GET)
-    public List<GameDTO> GamesList(){
-        return game_rep.findAll().stream().map(game -> new GameDTO(game)).collect(toList());
+    public List<GameDTO> GamesList(Authentication auth){
+        Player player = player_rep.findByUsername(auth.getName()).get(); // CHEQUEAR
+
+        return game_rep.findAll().stream().map(game -> {
+            GameDTO ret = new GameDTO(game);
+            ret.setAlreadyIn(game.getGamePlays().stream().map(gp -> gp.getPlayer()).anyMatch(p -> (p == player)));
+            return ret;
+        }).collect(toList());
+    }
+    @RequestMapping(path = "/game/{gameID}/gamePlay", method = RequestMethod.GET)
+    public ResponseEntity<Object> getGamePlayID(Authentication auth, @PathVariable Long gameID) {
+        if(isGuest(auth))
+            return new ResponseEntity<>(makeMap("error", "You're not logged in."), HttpStatus.UNAUTHORIZED);
+        Player player = player_rep.findByUsername(auth.getName()).orElse(null);
+        if(player == null)
+            return new ResponseEntity<>(makeMap("error", "Player not in database."), HttpStatus.INTERNAL_SERVER_ERROR);
+
+        Game game = game_rep.findById(gameID).orElse(null);
+        if(game == null)
+            return new ResponseEntity<>(makeMap("error", "Invalid Game-ID."), HttpStatus.FORBIDDEN);
+        if(game.getGamePlays().stream().noneMatch(gp -> (player == gp.getPlayer())))
+            return new ResponseEntity<>(makeMap("error", "You are not in the game!"), HttpStatus.FORBIDDEN);
+
+        GamePlay gamePlay = game.getGamePlays().stream().filter(gp -> (player == gp.getPlayer())).findAny().orElse(null);
+        if(gamePlay == null)
+            return new ResponseEntity<>(makeMap("error", "Error getting gamePlay"), HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return new ResponseEntity<>(makeMap("gpid", gamePlay.getId()), HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(path = "/PlayersInGame/{gamePlayID}", method = RequestMethod.GET)
