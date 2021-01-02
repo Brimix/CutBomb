@@ -33,9 +33,8 @@ function processData(){
     document.getElementById("game-log").innerHTML = "<h2>" + gameViewData.state + "</h2>";
 
     var HTML = "";
-    HTML += "<th width=\"30%\"> Player </th>"
-            + "<th  width=\"60%\" colspan = " + gameViewData.numberOfCards + "><center> Cards </center></th>";
-//            + "<th  width=\"10%\"> Spade </th>";
+    HTML += "<th width=\"30%\" class=\"left-row\"> Player </th>"
+            + "<th width=\"60%\" class=\"right-row\" colspan = " + gameViewData.numberOfCards + "><center> Cards </center></th>";
     document.getElementById("player-table-header").innerHTML = HTML;
 
     HTML = "";
@@ -59,9 +58,15 @@ function getParameterByName(name) {
 
 function PlayerView(player){
     var HTML = "";
-    HTML += "<td><h3>" + player.username + "</h2></td>";
+    HTML += "<td class=\"left-row\"><h3>" + player.username + "</h2></td>";
+    var count = 0;
     player.cards.forEach(function(card){
-        HTML += "<td class=\"cell\">";
+        count++;
+        HTML += "<td class=\"cell";
+        if(count == gameViewData.numberOfCards){
+            HTML += " right-row";
+        }
+        HTML += "\">";
         if(canFlip(player.id, card.face)) HTML += clickableButton(card.id, card.face);
         else HTML += notClickableButton(card.face);
         HTML += "</td>";
