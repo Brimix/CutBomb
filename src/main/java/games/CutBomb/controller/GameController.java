@@ -16,10 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static games.CutBomb.Util.isGuest;
 import static games.CutBomb.Util.makeMap;
@@ -67,20 +64,6 @@ public class GameController {
             return new ResponseEntity<>(makeMap("error", "Error getting gamePlay"), HttpStatus.INTERNAL_SERVER_ERROR);
 
         return new ResponseEntity<>(makeMap("gpid", gamePlay.getId()), HttpStatus.ACCEPTED);
-    }
-
-    @RequestMapping(path = "/PlayersInGame/{gamePlayID}", method = RequestMethod.GET)
-    public ResponseEntity<Object> getPlayers(Authentication auth, @PathVariable Long gamePlayID){
-        GamePlay gamePlay = gp_rep.findById(gamePlayID).orElse(null);
-        if(gamePlay == null)
-            return new ResponseEntity<>(makeMap("error", "Invalid GamePlay-ID."), HttpStatus.FORBIDDEN);
-
-        Game game = gamePlay.getGame();
-        if(game == null)
-            return new ResponseEntity<>(makeMap("error", "Game not in database."), HttpStatus.INTERNAL_SERVER_ERROR);
-
-        List<PlayerInGameDTO> list = game.getGamePlays().stream().map(gp -> new PlayerInGameDTO(gp)).collect(toList());
-        return new ResponseEntity<>(list, HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(path = "/CreateGame", method = RequestMethod.POST)
