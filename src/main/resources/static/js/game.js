@@ -43,12 +43,9 @@ function processData(){
     });
     HTML += "<tr>" + PlayerView(gameViewData.me) + "</tr>";
     document.getElementById("player-table-game").innerHTML = HTML;
-//    document.getElementById("blanks").innerHTML = gameViewData.blanks;
-//    document.getElementById("wires").innerHTML = gameViewData.wires;
-//    document.getElementById("bombs").innerHTML = gameViewData.bombs;
-    document.getElementById("blanks2").innerHTML = createCardBox("blank", gameViewData.blanks);
-    document.getElementById("wires2").innerHTML = createCardBox("wire", gameViewData.wires);
-    document.getElementById("bombs2").innerHTML = createCardBox("bomb", gameViewData.bombs);
+    document.getElementById("blanks").innerHTML = createCardBox("blank", gameViewData.blanks);
+    document.getElementById("wires").innerHTML = createCardBox("wire", gameViewData.wires);
+    document.getElementById("bombs").innerHTML = createCardBox("bomb", gameViewData.bombs);
 }
 
 function getParameterByName(name) {
@@ -72,7 +69,7 @@ function PlayerView(player){
         HTML += "</td>";
     });
     if(player.current == true){
-        HTML += "<td class=\"cell-spade\"><img class=\"card\" src=\"img/pliers.png\" alt=\"pliers.png\"></td>";
+        HTML += "<td class=\"cell-spade\"><img class=\"card\" src=\"img/pliers.gif\" alt=\"pliers.gif\"></td>";
     }
     return HTML;
 }
