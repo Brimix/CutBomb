@@ -28,6 +28,8 @@
 }
 #game-table td{
     background-color: rgba(50, 50, 50, 1);
+    border-top: solid red;
+    border-bottom: solid red;
     height: 50px;
 }
 #game-table .cell-spade{
@@ -37,27 +39,39 @@
 #game-table .left-row{
     border-top-left-radius: 25px;
     border-bottom-left-radius: 25px;
+    border-left: solid red;
     padding-left: 25px;
 }
 #game-table .right-row{
     border-top-right-radius: 25px;
     border-bottom-right-radius: 25px;
+    border-right: solid red;
     padding-right: 25px;
 }
-
 .card{
+    background-color: rgba(0, 0, 0, 0);
     height: 50px;
     margin-left: auto;
     margin-right: auto;
     border: none;
 }
 
+
 #card-box{
-    height: 100px;
+    width: 150px;
+    vertical-align: center;
+    position: relative
+}
+.card-box{
+    width: 100%;
+    height: 70px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    position: relative;
 }
 .card-box-img{
-    width: 100px;
-    opacity: 30%;
+    height: 100%;
+    opacity: 90%;
     position: absolute;
     vertical-align: middle;
     right: 50%;
@@ -66,6 +80,7 @@
     margin: 0;
     position: absolute;
     top: 50%;
-    left: 50%;
-    font-size: 30px;
+    left: 60%;
+    transform: translate(0%, -50%);
+    font-size: 50px;
 }
