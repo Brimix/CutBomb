@@ -72,7 +72,7 @@ function PlayerView(player){
         HTML += "</td>";
     });
     if(player.current == true){
-        HTML += "<td class=\"cell\"><img class=\"card\" src=\"img/pliers.png\" alt=\"pliers.png\"></td>";
+        HTML += "<td class=\"cell-spade\"><img class=\"card\" src=\"img/pliers.png\" alt=\"pliers.png\"></td>";
     }
     return HTML;
 }
