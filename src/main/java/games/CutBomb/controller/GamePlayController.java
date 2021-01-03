@@ -42,18 +42,36 @@ public class GamePlayController {
 
     @RequestMapping(path = "/waitingView/{gamePlayID}", method = RequestMethod.GET)
     public ResponseEntity<Object> waitingView(Authentication auth, @PathVariable Long gamePlayID) {
+        if(isGuest(auth))
+            return new ResponseEntity<>(makeMap("error", "You're not logged in."), HttpStatus.UNAUTHORIZED);
+        Player player = player_rep.findByUsername(auth.getName()).orElse(null);
+        if(player == null)
+            return new ResponseEntity<>(makeMap("error", "Player not in database."), HttpStatus.INTERNAL_SERVER_ERROR);
+
         GamePlay gamePlay = gp_rep.findById(gamePlayID).orElse(null);
         if(gamePlay == null)
             return new ResponseEntity<>(makeMap("error", "Invalid GamePlay-ID."), HttpStatus.FORBIDDEN);
+        if(!player.getGamePlays().contains(gamePlay))
+            return new ResponseEntity<>(makeMap("error", "This isn't your game."), HttpStatus.UNAUTHORIZED);
+
         return new ResponseEntity<>(new WaitingViewDTO(gamePlay), HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(path = "/GameView/{gamePlayID}", method = RequestMethod.GET)
-    public GameViewDTO gameView(Authentication auth, @PathVariable Long gamePlayID){
+    public ResponseEntity<Object> gameView(Authentication auth, @PathVariable Long gamePlayID){
+        if(isGuest(auth))
+            return new ResponseEntity<>(makeMap("error", "You're not logged in."), HttpStatus.UNAUTHORIZED);
+        Player player = player_rep.findByUsername(auth.getName()).orElse(null);
+        if(player == null)
+            return new ResponseEntity<>(makeMap("error", "Player not in database."), HttpStatus.INTERNAL_SERVER_ERROR);
+
         GamePlay gamePlay = gp_rep.findById(gamePlayID).orElse(null);
         if(gamePlay == null)
-            return null;
-        return new GameViewDTO(gamePlay);
+            return new ResponseEntity<>(makeMap("error", "Invalid GamePlay-ID."), HttpStatus.FORBIDDEN);
+        if(!player.getGamePlays().contains(gamePlay))
+            return new ResponseEntity<>(makeMap("error", "This isn't your game."), HttpStatus.UNAUTHORIZED);
+
+        return new ResponseEntity<>(new GameViewDTO(gamePlay), HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(path = "game/{gamePlayID}/card/{cardID}", method = RequestMethod.POST)
