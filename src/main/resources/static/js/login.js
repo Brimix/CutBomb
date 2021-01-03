@@ -10,7 +10,7 @@ $('#login-form').on('submit', function (event) {
             showMessage("Logged in as " + $("#logUser").val(), "result-ok");
             $("#logUser").val("");
             $("#logPass").val("");
-//            setTimeout( function(){ location.href = "main.html"; }, 4000);
+            setTimeout( function(){ location.href = "main.html"; }, 4000);
         })
         .fail(function(data) {
             console.log("login failed");
@@ -33,16 +33,16 @@ $('#register-form').on('submit', function(event){
             console.log("register ok");
             showMessage("Registered as a new player!", "result-ok");
             setTimeout( function(){
-                showMessage("Logging in as:" + $("#logUser").val(), "result-ok");
+                showMessage("Logging in as:" + $("#regUser").val(), "result-ok");
                 $.post("/api/login",
                     { user: $("#regUser").val(),
                       pass: $("#regPass").val() })
                     .done(function() {
                         console.log("login ok");
-                        showMessage("Logged in as " + $("#logUser").val(), "result-ok");
+                        showMessage("Logged in as " + $("#regUser").val(), "result-ok");
                         $("#regUser").val("");
                         $("#regPass").val("");
-//                        setTimeout( function(){ location.href = "main.html"; }, 4000);
+                        setTimeout( function(){ location.href = "main.html"; }, 4000);
                     })
                     .fail(function(data) {
                         console.log("Fatal error. Contact admin.");
