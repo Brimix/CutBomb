@@ -43,6 +43,8 @@ function processData(){
     });
     HTML += "<tr>" + PlayerView(gameViewData.me) + "</tr>";
     document.getElementById("player-table-game").innerHTML = HTML;
+
+    document.getElementById("wires-left").innerHTML = "There are <b>" + gameViewData.wiresLeft + "</b> wires left.";
     document.getElementById("blanks").innerHTML = createCardBox("blank", gameViewData.blanks);
     document.getElementById("wires").innerHTML = createCardBox("wire", gameViewData.wires);
     document.getElementById("bombs").innerHTML = createCardBox("bomb", gameViewData.bombs);

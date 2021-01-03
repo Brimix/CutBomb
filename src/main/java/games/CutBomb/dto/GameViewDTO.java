@@ -11,9 +11,8 @@ import static java.util.stream.Collectors.toList;
 
 public class GameViewDTO {
     private long id;
-//    private String username;
-//    private List<String> cards;
     private int numberOfCards;
+    private long wiresLeft;
     private String role;
     private InGamePlayer me;
     private List<InGamePlayer> opponents;
@@ -37,11 +36,15 @@ public class GameViewDTO {
             .filter(gp -> (gp != gamePlay))
             .map(gp -> new InGamePlayer(gp, true))
             .collect(toList());
+        this.wiresLeft = game.getGamePlays().stream()
+            .mapToLong(gp -> gp.getCards().stream().filter(card -> (card.getType() == "wire")).count())
+            .sum();
         this.state = game.getState();
     }
 
     public long getId() { return id; }
     public int getNumberOfCards() { return numberOfCards; }
+    public long getWiresLeft() { return wiresLeft; }
     public String getRole() { return role; }
     public String getState() { return state; }
     public long getBlanks() { return blanks; }
