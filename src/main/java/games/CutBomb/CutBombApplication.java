@@ -51,7 +51,9 @@ public class CutBombApplication {
 			CardRepository card_rep
 	){ return (args) -> {
 		Player BRX = new Player("Brimix", passwordEncoder().encode("secret"));
-		Player A = new Player("Anna", passwordEncoder().encode("a"));
+		player_rep.save(BRX);
+
+		/*Player A = new Player("Anna", passwordEncoder().encode("a"));
 		Player B = new Player("Brian", passwordEncoder().encode("b"));
 		Player C = new Player("Camila", passwordEncoder().encode("c"));
 		Player D = new Player("David", passwordEncoder().encode("d"));
@@ -96,7 +98,7 @@ public class CutBombApplication {
 		Game NG1 = game_rep.findById(1L).get(), NG2 = game_rep.findById(2L).get(), NG3 = game_rep.findById(3L).get();
 		GamePlay NGP1 = gp_rep.findById(2L).get(),  NGP2 = gp_rep.findById(4L).get(), NGP3 = gp_rep.findById(7L).get();
 		NG1.setHost(NGP1); NG2.setHost(NGP2); NG3.setHost(NGP3);
-		game_rep.save(NG1); game_rep.save(NG2); game_rep.save(NG3);
+		game_rep.save(NG1); game_rep.save(NG2); game_rep.save(NG3);*/
 	};}
 
 	@Bean
