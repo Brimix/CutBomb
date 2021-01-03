@@ -16,18 +16,23 @@
     <div id="role" class="message-box"></div>
     <div id="game-log" class="message-box"></div>
 
-    <form id="flip-form" onsubmit="return false"> </form>
-    <center><table id="game-table">
-        <tr id="player-table-header"></tr>
-        <tbody id="player-table-game"> </tbody>
-    </table></center>
+    <div class="row">
+        <div class="col-sm-9">
+            <center><table id="game-table">
+                <tr id="player-table-header"></tr>
+                <tbody id="player-table-game"> </tbody>
+            </table></center>
+        </div>
+        <div class="col-sm-3">
 
-    <div class="row" id="card-box">
-        <div class="col-sm-4" id="wires2"></div>
-        <div class="col-sm-4" id="blanks2"></div>
-        <div class="col-sm-4" id="bombs2"></div>
+            <div id="card-box">
+                <h3>You have:</h3>
+                <div class="card-box" id="blanks"></div>
+                <div class="card-box" id="wires"></div>
+                <div class="card-box" id="bombs"></div>
+            </div>
+        </div>
     </div>
-
 
 <script src="./js/popper.min.js"></script>
 <script src="./js/jquery.js"></script>
