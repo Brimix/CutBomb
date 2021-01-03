@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import static games.CutBomb.Util.parseDate;
 import static java.util.stream.Collectors.toList;
 
 public class WaitingViewDTO {
@@ -34,18 +35,18 @@ public class WaitingViewDTO {
 class PlayerInGame{
     private long id;
     private String username;
-    private Date joined;
+    private String joined;
     private boolean host;
 
     public PlayerInGame(GamePlay gamePlay){
         this.id = gamePlay.getPlayer().getId();
         this.username = gamePlay.getPlayer().getUsername();
-        this.joined = gamePlay.getJoined();
+        this.joined = parseDate(gamePlay.getJoined());
         this.host = gamePlay.isHost();
     }
 
     public long getId() { return id; }
     public String getUsername() { return username; }
-    public Date getJoined() { return joined; }
+    public String getJoined() { return joined; }
     public boolean getHost() { return host; }
 }
