@@ -4,6 +4,8 @@ import games.CutBomb.model.Game;
 
 import java.util.Date;
 
+import static games.CutBomb.Util.parseDate;
+
 public class GameDTO {
     private long id;
     private String created;
@@ -31,10 +33,6 @@ public class GameDTO {
     public boolean isAlreadyIn() { return alreadyIn; }
     public void setAlreadyIn(boolean alreadyIn) { this.alreadyIn = alreadyIn; }
 
-    private String parseDate(Date date){
-        String s = date.toString();
-        return s.substring(0, 19);
-    }
     private String createState(Game game){
         if(game.getFinished() != null) return "finished";
         if(game.getStarted() != null) return "started";
