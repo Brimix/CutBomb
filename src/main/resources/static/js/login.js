@@ -10,7 +10,7 @@ $('#login-form').on('submit', function (event) {
             showMessage("Logged in as " + $("#logUser").val(), "result-ok");
             $("#logUser").val("");
             $("#logPass").val("");
-            setTimeout( function(){ location.href = "main.html"; }, 4000);
+            setTimeout( function(){ location.href = "main.html"; }, 3000);
         })
         .fail(function(data) {
             console.log("login failed");
@@ -33,7 +33,7 @@ $('#register-form').on('submit', function(event){
             console.log("register ok");
             showMessage("Registered as a new player!", "result-ok");
             setTimeout( function(){
-                showMessage("Logging in as:" + $("#regUser").val(), "result-ok");
+                showMessage("Logging in as " + $("#regUser").val(), "result-ok");
                 $.post("/api/login",
                     { user: $("#regUser").val(),
                       pass: $("#regPass").val() })
@@ -42,18 +42,18 @@ $('#register-form').on('submit', function(event){
                         showMessage("Logged in as " + $("#regUser").val(), "result-ok");
                         $("#regUser").val("");
                         $("#regPass").val("");
-                        setTimeout( function(){ location.href = "main.html"; }, 4000);
+                        setTimeout( function(){ location.href = "main.html"; }, 3000);
                     })
                     .fail(function(data) {
                         console.log("Fatal error. Contact admin.");
-                        showMessage("Fatal error. Contact admin.", "result-error");
+                        showMessage("Fatal error. Try logging from the \"login form\" or contact admin.", "result-error");
                     });
             }, 1000);
 
         })
         .fail(function(data){
             console.log("register fail");
-//            showMessage(data.responseJSON.error);
+            showMessage(data.responseJSON.error);
             $("#regUser").val("");
             $("#regPass").val("");
             $("#regUser").focus();
@@ -66,8 +66,6 @@ $('#logout-form').on('submit', function (event) {
     $.post("/api/logout")
         .done(function () {
             console.log("logout ok");
-//            $('#logoutSuccess').show("slow").delay(2000).hide("slow");
-//            updateJson();
         })
         .fail(function () {
             console.log("logout fails");
