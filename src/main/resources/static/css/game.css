@@ -1,9 +1,5 @@
 #role{
-    text-align: center;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    margin-top: 0px;
 }
 .role-good{
     background-color: #007000;
@@ -11,50 +7,42 @@
 .role-bad{
     background-color: #700000;
 }
-
 #game-log{
-    text-align: center;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    background-color: #404040;
+    background-color: #303030;
 }
 
 #game-table{
-    width: 900px;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    width: 800px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     border-collapse: separate;
-    border-spacing: 0 15px;
+    border-spacing: 0 10px;
 }
-
 #game-table tr{
-    height: 50px;
-    background-color: #333333;
+    opacity: 100%;
 }
 #game-table th{
+    background-color: rgba(50, 50, 50, 1);
     text-align: center;
     text-color: #ffffff;
-    opacity: 90%;
 }
-.left-row{
-    border-top-left-radius: 20px;
-    border-bottom-left-radius: 20px;
-    padding-left: 15px;
-}
-.right-row{
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;
-    padding-right: 15px;
-}
-
-.cell{
+#game-table td{
+    background-color: rgba(50, 50, 50, 1);
     height: 50px;
 }
-
-.cell-spade{
+#game-table .cell-spade{
+    background-color: rgba(0, 0, 0, 0);
     border: none;
+}
+#game-table .left-row{
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+    padding-left: 25px;
+}
+#game-table .right-row{
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+    padding-right: 25px;
 }
 
 .card{
@@ -67,7 +55,6 @@
 #card-box{
     height: 100px;
 }
-
 .card-box-img{
     width: 100px;
     opacity: 30%;
@@ -75,7 +62,6 @@
     vertical-align: middle;
     right: 50%;
 }
-
 .card-box-num{
     margin: 0;
     position: absolute;
